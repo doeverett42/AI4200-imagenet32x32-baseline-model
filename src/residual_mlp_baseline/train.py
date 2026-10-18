@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, TensorDataset
 
-from .model import TASKS, ResidualMLP
+from .model import TASKS, TASK_SETTINGS, ResidualMLP
 
 
 # Baseline settings. Deliberately plain so they are easy to beat:
@@ -31,8 +31,11 @@ def train(task, X_train, y_train, seed=0, device="cuda"):
     """Build a new model and train it from scratch. Returns the trained model."""
     torch.manual_seed(seed)                   # makes the run reproducible
 
+    #Get passed in settings 
+    settings = TASK_SETTINGS[task]
+
     # 1. Build the model for this task. Only input size and class count differ.
-    model = ResidualMLP(**TASKS[task]).to(device)
+    model = ResidualMLP(**TASKS[task], width=settings["width"], hidden=settings["hidden"], depth=settings["depth"], activation=settings["activation"]).to(device)
 
     # 2. Wrap the data so we can loop over shuffled mini-batches.
     dataset = TensorDataset(prepare(X_train), torch.as_tensor(y_train).long())
@@ -40,7 +43,15 @@ def train(task, X_train, y_train, seed=0, device="cuda"):
 
     # 3. Choose the loss and the optimizer.
     loss_fn = nn.CrossEntropyLoss()           # expects raw logits
-    optimizer = torch.optim.SGD(model.parameters(), lr=LEARNING_RATE)
+    if settings["optimizer"] == "adamw": 
+        optimizer = torch.optim.AdamW(model.parameters(), lr=settings["lr"], weight_decay=settings["weight_decay"])
+    else: 
+        optimizer = torch.optim.SGD(model.parameters(), lr=settings["lr"], momentum=settings["momentum"], weight_decay=settings["weight_decay"])
+    
+    #option: define scheduler if passed in
+    scheduler = None 
+    if settings["step_decay"]: 
+        scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=max(1, EPOCHS[task] // 3), gamma=0.5) #keep initial steps few
 
     # 4. The training loop.
     model.train()
@@ -59,6 +70,9 @@ def train(task, X_train, y_train, seed=0, device="cuda"):
             total_loss += loss.item() * len(X_batch)
 
         print(f"epoch {epoch + 1}: train loss {total_loss / len(dataset):.4f}")
+        #if scheduler is implemeted then run it 
+        if scheduler is not None: 
+            scheduler.step()
 
     return model
 
