@@ -10,8 +10,8 @@
 **Change:** Reduced MNIST depth from 30 residual blocks to 6. All other settings stayed the same.
 **Why:** MNIST may not need 30 blocks to separate ten handwritten digits. I want to see whether a simpler residual model can learn as well with less computation.
 **Expected:** Fewer parameters and faster training. Validation accuracy might improve or stay similar if the extra depth was unnecessary; it could fall if six blocks are insufficient.
-**Result:** Test accuracy 95.95% -> 95.95%. Train loss 0.1805. 1 min to train on lmy local machine with 1 GPU. The model performed the same but with less 
-depth, so complexity was not improving it. I will add momentum to possibly escape local minima. 
+**Result:** Test accuracy 95.95% -> 96.82%. Train loss 0.1884. 1.1 min to train on lmy local machine with 1 GPU. The model performed better with less 
+depth, so complexity was not improving it but perhaps causing too much training memorization. I will add momentum to possibly escape local minima. 
 
 ### Change 0 — cifar10 — 2026-10-16
 
