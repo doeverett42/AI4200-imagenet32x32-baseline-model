@@ -15,7 +15,7 @@ TASK_SETTINGS = {
     "mnist": {
         "width": 128,
         "hidden": 256,
-        "depth": 30,
+        "depth": 6,
         "activation": "tanh",
         "optimizer": "sgd",
         "lr": 0.05,
