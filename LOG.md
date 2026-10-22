@@ -34,6 +34,19 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Expected:** Better late-epoch validation performance. If decay happens too early, learning may flatten before the model has learned enough.
 **Result:** Validation accuracy 97.08% -> 97.86%. Train loss 0.0335. 0.5 min to train on my local machine with 1 GPU. Smaller later updates helped the final result. Next I will try adding more epochs to make the scheduler more impactful. 
 
+### Change 4 - mnist - 2026-10-21
+
+**Change:** Changed number of training epochs from 10 to 30.
+**Why:** The learning rate scheduler halves the learning rate every 1/3 epochs, so I wanted to give the model more time for each learning rate variation. 
+**Expected:** More epochs means more gradient updates to refine the model, and going from large to smaller learning rates should improve test accuracy without overly memorizing the dataset. 
+**Result:** Validation accuracy 97.86% -> 98.22%. Train loss 0.0019. 1.4 min to train on my local machine with 1 GPU. More epochs drastically improved training loss, resulting in signifcant test accuracy as well. I will try a new optimizer next. 
+
+### Change 5 - mnist - 2026-10-21
+**Change:** Changed optimizer to AdamW. 
+**Why:** Adaptive per-parameter updates may make better progress within the same training budget if SGD is the limiting factor.
+**Expected:** Different convergence and possibly higher validation accuracy, but not a guaranteed improvement.
+**Result:** Validation accuracy 98.22% -> 93.43%. Train loss 0.2114. 1.6 min to train on my local machine with 1 GPU. The AdamW optimizer with learning rate 0.05 showed train loss that decreased drastically initially but then began to oscillate, which indicated it was too large. I will lower it greatly for next test. 
+
 ### Change 0 — cifar10 — 2026-10-16
 
 **Change:** Baseline
