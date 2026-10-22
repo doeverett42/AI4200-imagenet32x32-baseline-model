@@ -102,7 +102,7 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Change:** Changed model depth from 6 to 10. 
 **Why:** The training loss is already increasing low, meaning maybe all the information is in the machine already, but it needs more time to process and reshape.
 **Expected:** The model should stay the same in training loss and maybe will show improvement in test accuracy or just take more time to train.  
-**Result:** Validation accuracy 98.42% -> %. Train loss 0.0001. 1.3 min to train on my local machine with 1 GPU. The added depth
+**Result:** Validation accuracy 98.42% -> 98.46%. Train loss 0.0001. 2.3 min to train on my local machine with 1 GPU. The added depth did not affect training loss but did increase test accuracy along with training time.
 
 ### Change 0 — cifar10 — 2026-10-16
 
