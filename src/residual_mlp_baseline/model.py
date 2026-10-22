@@ -19,7 +19,7 @@ TASK_SETTINGS = {
         "hidden": 256,
         "depth": 6,
         "activation": "tanh",
-        "optimizer": "sgd",
+        "optimizer": "adamw",
         "lr": 0.05,
         "momentum": 0.9,
         "weight_decay": 0.0,
