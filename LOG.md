@@ -83,7 +83,7 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Change:** Changed weight decay from 0.01 to 0.05. 
 **Why:** The model already has an extremely low training loss, so I want to help it generalize better given the increased complexity
 **Expected:** Weight decay will help the model take into account more data from all the inputs so that is performs better on test data. 
-**Result:** Validation accuracy 98.42% -> 98.40%. Train loss 0.0001. 1.1 min to train on my local machine with 1 GPU. The added weight decay kept training loss the same, and test accuracy decreased. 
+**Result:** Validation accuracy 98.42% -> 98.40%. Train loss 0.0001. 1.1 min to train on my local machine with 1 GPU. The added weight decay kept training loss the same, and test accuracy decreased. I will go back to weight decay of 0.01. 
 
 ### Change 0 — cifar10 — 2026-10-16
 
