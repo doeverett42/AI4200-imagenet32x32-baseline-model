@@ -42,10 +42,24 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Result:** Validation accuracy 97.86% -> 98.22%. Train loss 0.0019. 1.4 min to train on my local machine with 1 GPU. More epochs drastically improved training loss, resulting in signifcant test accuracy as well. I will try a new optimizer next. 
 
 ### Change 5 - mnist - 2026-10-21
+
 **Change:** Changed optimizer to AdamW. 
 **Why:** Adaptive per-parameter updates may make better progress within the same training budget if SGD is the limiting factor.
 **Expected:** Different convergence and possibly higher validation accuracy, but not a guaranteed improvement.
 **Result:** Validation accuracy 98.22% -> 93.43%. Train loss 0.2114. 1.6 min to train on my local machine with 1 GPU. The AdamW optimizer with learning rate 0.05 showed train loss that decreased drastically initially but then began to oscillate, which indicated it was too large. I will lower it greatly for next test. 
+
+### Change 6 - mnist - 2026-10-21
+
+**Change:** Changed learning rate from 0.05 to 0.01. 
+**Why:** Previous learning rate should training loss oscillations. 
+**Expected:** More consisting training loss decrease and convergence to a minimum. 
+**Result:** Validation accuracy 93.43% -> 98.02%. Train loss 0.0072. 1.4 min to train on my local machine with 1 GPU. The AdamW optimizer with learning rate 0.001 showed train loss that decreased drastically throughout, even reaching loss of 0.0004 but it increased again at the end. I will try a bigger scheduler decrease. 
+
+### Change 7 - mnist - 2026-10-21
+**Change:** Changed scheduler from having every 1/3 epochs to every 1/4 epochs. 
+**Why:** Previous learning rate combined with scheduler saw a rise in training loss and oscillation in final epochs.  
+**Expected:** More consisting training loss decrease and convergence to a minimum over all epochs. 
+**Result:** Validation accuracy 93.43% -> %. Train loss .  min to train on my local machine with 1 GPU. The AdamW optimizer with learning rate 0.001 
 
 ### Change 0 — cifar10 — 2026-10-16
 
