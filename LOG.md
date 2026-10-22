@@ -56,34 +56,53 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Result:** Validation accuracy 93.43% -> 98.02%. Train loss 0.0072. 1.4 min to train on my local machine with 1 GPU. The AdamW optimizer with learning rate 0.001 showed train loss that decreased drastically throughout, even reaching loss of 0.0004 but it increased again at the end. I will try a bigger scheduler decrease. 
 
 ### Change 7 - mnist - 2026-10-21
+
 **Change:** Changed scheduler from having every 1/3 epochs to every 1/4 epochs. 
 **Why:** Previous learning rate combined with scheduler saw a rise in training loss and oscillation in final epochs.  
 **Expected:** More consisting training loss decrease and convergence to a minimum over all epochs. 
 **Result:** Validation accuracy 98.02% -> 98.35%. Train loss 0.0002. 0.9 min to train on my local machine with 1 GPU. The AdamW optimizer with learning rate 0.001 and a halving scheduler that occured every 1/4 epochs showed significant decrease in training loss and accompanying substantial increase in test accuracy. 
 
 ### Change 8 - mnist - 2026-10-21
+
 **Change:** Added weight decay of 0.001. 
 **Why:** The model already has an extremely low training loss, so I want to help it generalize better. 
 **Expected:** Weight decay will help the model take into account more data from all the inputs so that is performs better on test data. 
 **Result:** Validation accuracy 98.35% -> 98.41%. Train loss 0.0002. 0.9 min to train on my local machine with 1 GPU. The weight decay did not hinder training loss and it marginally improved test accuracy, so I will increase it. 
 
 ### Change 8 - mnist - 2026-10-21
+
 **Change:** Changed weight decay from 0.001 to 0.01. 
 **Why:** The model already has an extremely low training loss, so I want to help it generalize better. 
 **Expected:** Weight decay will help the model take into account more data from all the inputs so that is performs better on test data. 
 **Result:** Validation accuracy 98.41% -> 98.39%. Train loss 0.0003. 1.1 min to train on my local machine with 1 GPU. The added weight decay reduced training loss accuracy and validation accuracy, meaning the model may have reached maximum complexity. I will try expanding feature dimensions.
 
 ### Change 9 - mnist - 2026-10-21
+
 **Change:** Changed width from 128 to 392 and changed hidden from 256 to 1568. 
 **Why:** The model seemed to get stuck on training loss, so I wanted to push it further by increasing complexity to learn. 
 **Expected:** More feature dimensions would allow the model to reduce training loss but may lead to overfitting. 
 **Result:** Validation accuracy 98.39% -> 98.42%. Train loss 0.0001. 1.1 min to train on my local machine with 1 GPU. The increased complexity did allow the model to achive the lowest training loss so far, but the increase in test accuracy was only marginal of +0.01% from the best previous model. 
 
 ### Change 10 - mnist - 2026-10-21
+
 **Change:** Changed weight decay from 0.01 to 0.05. 
 **Why:** The model already has an extremely low training loss, so I want to help it generalize better given the increased complexity
 **Expected:** Weight decay will help the model take into account more data from all the inputs so that is performs better on test data. 
 **Result:** Validation accuracy 98.42% -> 98.40%. Train loss 0.0001. 1.1 min to train on my local machine with 1 GPU. The added weight decay kept training loss the same, and test accuracy decreased. I will go back to weight decay of 0.01. 
+
+### Change 11 - mnist -2026-10-21
+
+**Change:** Changed model width from 392 to 522. 
+**Why:** Increasing the complexity of features increased the model's ability to learn marginally, so maybe it needs more features to continue to improve with the low training loss already. 
+**Expected:** The model should improve in training loss, but it might begin overfitting for test data. 
+**Result:** Validation accuracy 98.40% -> 98.39%. Train loss 0.0001. 1.3 min to train on my local machine with 1 GPU. The added weight decay kept training loss the same, and test accuracy decreased. I will go back to width of 392. 
+
+### Change 12 - mnist -2026-10-21
+
+**Change:** Changed model depth from 6 to 10. 
+**Why:** The training loss is already increasing low, meaning maybe all the information is in the machine already, but it needs more time to process and reshape.
+**Expected:** The model should stay the same in training loss and maybe will show improvement in test accuracy or just take more time to train.  
+**Result:** Validation accuracy 98.42% -> %. Train loss 0.0001. 1.3 min to train on my local machine with 1 GPU. The added depth
 
 ### Change 0 — cifar10 — 2026-10-16
 

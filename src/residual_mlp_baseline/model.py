@@ -15,9 +15,9 @@ TASK_SETTINGS = {
     "mnist": {
         "batch_size": 256,
         "epochs": 30,
-        "width": 522,
+        "width": 392,
         "hidden": 1568,
-        "depth": 6,
+        "depth": 10,
         "activation": "tanh",
         "optimizer": "adamw",
         "lr": 0.001,
