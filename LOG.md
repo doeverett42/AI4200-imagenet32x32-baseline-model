@@ -14,10 +14,18 @@
 depth, so complexity was not improving it but perhaps causing too much training memorization. I will add momentum to possibly escape local minima. 
 
 ### Change 2 - mnist - 2026-10-21
+
 **Change:** Changed MNIST's SGD momentum from 0.0 to 0.9, keeping learning rate 0.05 and the accepted architecture unchanged.
 **Why:** I want to test whether using recent gradient direction helps the model learn more effectively than plain SGD within the same ten epochs.
 **Expected:** Faster useful loss reduction and possibly higher validation accuracy. Larger oscillations or unstable loss are possible if the combined update is too aggressive.
 **Result:** Test accuracy 96.82% -> 97.08%. Train loss 0.0418. 0.5 min to train on my local machine with 1 GPU. The model performed significantly better with training loss and fairly better with test accuracy. I will keep the momentum and try ReLU. 
+
+### Change 3 - mnist - 2026-10-21
+
+**Change:** Replaced MNIST's tanh/Xavier recipe with ReLU and the existing automatic He initialization for matrices feeding ReLU. 
+**Why:** I want to test whether a different nonlinear response and its matching starting weight scale improve learning.
+**Expected:** Different activation/gradient behavior and possibly better validation accuracy. ReLU may instead hurt if many useful features become inactive.
+**Result:** Validation accuracy 97.08% -> 96.82%. Train loss 0.0392. 0.7 min to train on my local machine with 1 GPU. The model learned worse compared with tanh because it performed better on training data but worse on test data. I will remove ReLU with He initialization because it seemed to overfit more. 
 
 ### Change 0 — cifar10 — 2026-10-16
 

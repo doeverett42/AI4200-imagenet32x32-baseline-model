@@ -21,7 +21,7 @@ TASK_SETTINGS = {
         "lr": 0.05,
         "momentum": 0.9,
         "weight_decay": 0.0,
-        "step_decay": False
+        "step_decay": True
     },
 
     "cifar10": {
