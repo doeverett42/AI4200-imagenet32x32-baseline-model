@@ -32,7 +32,7 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Change:** Enabled MNIST's existing StepLR schedule. Starting learning rate and ten-epochs stayed unchanged.
 **Why:** Smaller later updates may refine the model after larger early updates have made progress.
 **Expected:** Better late-epoch validation performance. If decay happens too early, learning may flatten before the model has learned enough.
-**Result:** Validation accuracy 97.08% -> ___%. Train loss ___. ___ min to train on ___ with ___ GPU(s). After the learning rate decreased, the training loss ___. Smaller later updates [helped/did not help] the final result. I will [keep/remove/test again] the schedule because ___.
+**Result:** Validation accuracy 97.08% -> 97.86%. Train loss 0.0335. 0.5 min to train on my local machine with 1 GPU. Smaller later updates helped the final result. Next I will try adding more epochs to make the scheduler more impactful. 
 
 ### Change 0 — cifar10 — 2026-10-16
 

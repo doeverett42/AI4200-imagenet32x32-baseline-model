@@ -39,7 +39,7 @@ def train(task, X_train, y_train, seed=0, device="cuda"):
 
     # 2. Wrap the data so we can loop over shuffled mini-batches.
     dataset = TensorDataset(prepare(X_train), torch.as_tensor(y_train).long())
-    loader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True)
+    loader = DataLoader(dataset, batch_size=settings["batch_size"], shuffle=True)
 
     # 3. Choose the loss and the optimizer.
     loss_fn = nn.CrossEntropyLoss()           # expects raw logits
@@ -51,11 +51,11 @@ def train(task, X_train, y_train, seed=0, device="cuda"):
     #option: define scheduler if passed in
     scheduler = None 
     if settings["step_decay"]: 
-        scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=max(1, EPOCHS[task] // 3), gamma=0.5) #keep initial steps few
+        scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=max(1, settings["epochs"] // 3), gamma=0.5) #keep initial steps few
 
     # 4. The training loop.
     model.train()
-    for epoch in range(EPOCHS[task]):
+    for epoch in range(settings["epochs"]):
         total_loss = 0.0
         for X_batch, y_batch in loader:
             X_batch, y_batch = X_batch.to(device), y_batch.to(device)

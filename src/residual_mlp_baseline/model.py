@@ -13,6 +13,8 @@ TASKS = {
 #Give each task independent settings; begin at baseline
 TASK_SETTINGS = {
     "mnist": {
+        "batch_size": 256,
+        "epochs": 30,
         "width": 128,
         "hidden": 256,
         "depth": 6,
@@ -25,6 +27,8 @@ TASK_SETTINGS = {
     },
 
     "cifar10": {
+        "batch_size": 256,
+        "epochs": 30,
         "width": 128,
         "hidden": 256,
         "depth": 30,
@@ -37,6 +41,8 @@ TASK_SETTINGS = {
     },
 
     "imagenet32": {
+        "batch_size": 256,
+        "epochs": 10,
         "width": 128,
         "hidden": 256,
         "depth": 30,
