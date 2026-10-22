@@ -22,7 +22,7 @@ TASK_SETTINGS = {
         "optimizer": "adamw",
         "lr": 0.001,
         "momentum": 0.9,
-        "weight_decay": 0.01,
+        "weight_decay": 0.05,
         "step_decay": True
     },
 
