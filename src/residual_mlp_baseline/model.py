@@ -16,7 +16,7 @@ TASK_SETTINGS = {
         "width": 128,
         "hidden": 256,
         "depth": 6,
-        "activation": "relu",
+        "activation": "tanh",
         "optimizer": "sgd",
         "lr": 0.05,
         "momentum": 0.9,
