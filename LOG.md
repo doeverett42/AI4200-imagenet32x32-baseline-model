@@ -61,6 +61,18 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Expected:** More consisting training loss decrease and convergence to a minimum over all epochs. 
 **Result:** Validation accuracy 98.02% -> 98.35%. Train loss 0.0002. 0.9 min to train on my local machine with 1 GPU. The AdamW optimizer with learning rate 0.001 and a halving scheduler that occured every 1/4 epochs showed significant decrease in training loss and accompanying substantial increase in test accuracy. 
 
+### Change 8 - mnist - 2026-10-21
+**Change:** Added weight decay of 0.001. 
+**Why:** The model already has an extremely low training loss, so I want to help it generalize better. 
+**Expected:** Weight decay will help the model take into account more data from all the inputs so that is performs better on test data. 
+**Result:** Validation accuracy 98.35% -> 98.41%. Train loss 0.0002. 0.9 min to train on my local machine with 1 GPU. The weight decay did not hinder training loss and it marginally improved test accuracy, so I will increase it. 
+
+### Change 8 - mnist - 2026-10-21
+**Change:** Changed weight decay from 0.001 to 0.01. 
+**Why:** The model already has an extremely low training loss, so I want to help it generalize better. 
+**Expected:** Weight decay will help the model take into account more data from all the inputs so that is performs better on test data. 
+**Result:** Validation accuracy 98.41% -> 98.39%. Train loss 0.0003. 1.1 min to train on my local machine with 1 GPU. The added weight decay reduced training loss accuracy and validation accuracy, meaning the model may have reached maximum complexity. I will try expanding feature dimensions.
+
 ### Change 0 — cifar10 — 2026-10-16
 
 **Change:** Baseline
