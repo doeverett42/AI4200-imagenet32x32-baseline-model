@@ -59,7 +59,7 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Change:** Changed scheduler from having every 1/3 epochs to every 1/4 epochs. 
 **Why:** Previous learning rate combined with scheduler saw a rise in training loss and oscillation in final epochs.  
 **Expected:** More consisting training loss decrease and convergence to a minimum over all epochs. 
-**Result:** Validation accuracy 93.43% -> %. Train loss .  min to train on my local machine with 1 GPU. The AdamW optimizer with learning rate 0.001 
+**Result:** Validation accuracy 98.02% -> 98.35%. Train loss 0.0002. 0.9 min to train on my local machine with 1 GPU. The AdamW optimizer with learning rate 0.001 and a halving scheduler that occured every 1/4 epochs showed significant decrease in training loss and accompanying substantial increase in test accuracy. 
 
 ### Change 0 — cifar10 — 2026-10-16
 
