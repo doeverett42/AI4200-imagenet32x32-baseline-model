@@ -51,7 +51,7 @@ def train(task, X_train, y_train, seed=0, device="cuda"):
     #option: define scheduler if passed in
     scheduler = None 
     if settings["step_decay"]: 
-        scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=max(1, settings["epochs"] // 6), gamma=0.5) #keep initial steps few
+        scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=max(1, settings["epochs"] // 4), gamma=0.5) #keep initial steps few
 
     # 4. The training loop.
     model.train()
