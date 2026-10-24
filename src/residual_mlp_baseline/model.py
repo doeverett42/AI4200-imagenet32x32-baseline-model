@@ -18,13 +18,13 @@ TASK_SETTINGS = {
         "width": 392,
         "hidden": 1568,
         "depth": 10,
-        "activation": "tanh",
+        "activation": "gelu",
         "optimizer": "adamw",
         "lr": 0.001,
         "momentum": 0.9,
         "weight_decay": 0.01,
         "step_decay": True,
-        "normalization": "batch"
+        "normalization": "layer"
     },
 
     "cifar10": {
@@ -59,7 +59,8 @@ TASK_SETTINGS = {
 def make_activation(name):
     activations = {
         "tanh": nn.Tanh,
-        "relu": nn.ReLU
+        "relu": nn.ReLU,
+        "gelu": nn.GELU
     }
     if name not in activations:
         raise ValueError(f"Unknown activation: {name}")
