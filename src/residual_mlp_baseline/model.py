@@ -20,7 +20,7 @@ TASK_SETTINGS = {
         "depth": 10,
         "activation": "tanh",
         "optimizer": "adamw",
-        "lr": 0.002,
+        "lr": 0.0009,
         "momentum": 0.9,
         "weight_decay": 0.01,
         "step_decay": True
