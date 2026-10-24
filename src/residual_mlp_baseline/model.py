@@ -15,7 +15,7 @@ TASK_SETTINGS = {
     "mnist": {
         "batch_size": 256,
         "epochs": 20,
-        "width": 784,
+        "width": 128,
         "hidden": 1568,
         "depth": 70,
         "activation": "tanh",
@@ -23,7 +23,7 @@ TASK_SETTINGS = {
         "lr": 0.001,
         "momentum": 0.9,
         "weight_decay": 0.01,
-        "step_decay": False
+        "step_decay": True
     },
 
     "cifar10": {
