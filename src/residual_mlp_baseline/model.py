@@ -23,7 +23,8 @@ TASK_SETTINGS = {
         "lr": 0.001,
         "momentum": 0.9,
         "weight_decay": 0.01,
-        "step_decay": True
+        "step_decay": True,
+        "normalization": "batch"
     },
 
     "cifar10": {
@@ -64,6 +65,25 @@ def make_activation(name):
         raise ValueError(f"Unknown activation: {name}")
     return activations[name]()
 
+#choose normalization for a newly created, untrained model
+def configure_normalization(model, normalization="layer"):
+    #The original model already contains LayerNorm
+    if normalization == "layer":
+        return model
+
+    if normalization != "batch":
+        raise ValueError(f"Unknown normalization: {normalization}")
+
+    width = model.input_layer.out_features
+
+    #Replace normalization inside each residual branch
+    for block in model.blocks:
+        block.norm = nn.BatchNorm1d(width)
+
+    #Replace the normalization before the classification head.
+    model.head_norm = nn.BatchNorm1d(width)
+
+    return model
 
 class Block(nn.Module):
     """One residual block:  x + Linear(tanh(Linear(LayerNorm(x))))
