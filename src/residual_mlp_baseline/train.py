@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, TensorDataset
 
-from .model import TASKS, TASK_SETTINGS, ResidualMLP, configure_normalization
+from .model import TASKS, TASK_SETTINGS, ResidualMLP, configure_normalization, configure_head
 
 
 # Baseline settings. Deliberately plain so they are easy to beat:
@@ -36,8 +36,11 @@ def train(task, X_train, y_train, seed=0, device="cuda"):
 
     # 1. Build the model for this task. Only input size and class count differ.
     model = ResidualMLP(**TASKS[task], width=settings["width"], hidden=settings["hidden"], depth=settings["depth"], activation=settings["activation"]).to(device)
+    
     #Configure fresh layers before moving everything to the device
-    model = configure_normalization(model, settings.get("normalization", "layer")).to(device)
+    model = configure_normalization(model, settings.get("normalization", "layer"))
+    model = configure_head(model, settings.get("head_type", "mlp"))
+    model = model.to(device)
 
     #Apply tanh, then randomly drop 10% of hidden activations for MNIST
     if task == "mnist":

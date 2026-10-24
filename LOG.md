@@ -139,14 +139,21 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Expected:** Training loss may increase because learning becomes harder while dropout is active. Accuracy could improve, but unnecessary dropout could instead make performance worse.
 **Result:** Test accuracy 98.46% -> 98.49%. Train loss 0.0009. 1.6 min to train. Dropout produced three more correct predictions on the test set without noticeably increasing training time. I will next test dropout of 0.2 with all other settings unchanged.
 
-### Change 18 - mnist - 2026-10-23
+### Change 18 - mnist - 2026-10-24
 
 **Change:** Replaced LayerNorm with BatchNorm inside each residual branch and before the classification head.
 **Why:** Increasing model size and adjusting regularization produced little improvement. I want to see whether normalizing each feature across training examples works better than normalizing each image’s features separately.
 **Expected:** Different training behavior and possibly better accuracy without increasing model size. BatchNorm could also perform worse because it uses batch statistics during training.
 **Result:** Test accuracy 98.49% -> 98.27%. Train loss 0.0011. 1.8 min to train. Training loss decreased substantially, but this did not produce better test accuracy. The sharp later loss reductions also followed the scheduled learning-rate decreases, so they don't show that BatchNorm would benefit more from longer training. I will restore LayerNorm and test GELU separately.
 
-### Change 19 - mnist - 2026-10-23
+### Change 19 - mnist - 2026-10-24
+
+**Change:** Replaced tanh with GELU in the residual branches and classification head.
+**Why:** Increasing model size and changing regularization produced little improvement. I want to test whether a different activation helps the model learn representations that work better on unseen digits.
+**Expected:** Different learning behavior and possibly better accuracy without adding parameters. GELU could also perform worse, so lower training loss alone would not establish an improvement.
+**Result:** Test accuracy 98.49% -> 98.56%. Train loss 0.0003. 2.0 min to train. GELU produced seven more correct predictions than my previous best model, although training took slightly longer. 
+
+### Change 20 - mnist - 2026-10-24
 
 **Change:** 
 **Why:** 

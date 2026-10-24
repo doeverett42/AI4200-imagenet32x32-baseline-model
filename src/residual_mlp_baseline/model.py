@@ -24,7 +24,8 @@ TASK_SETTINGS = {
         "momentum": 0.9,
         "weight_decay": 0.01,
         "step_decay": True,
-        "normalization": "layer"
+        "normalization": "layer",
+        "head_type": "linear"
     },
 
     "cifar10": {
@@ -83,6 +84,31 @@ def configure_normalization(model, normalization="layer"):
 
     #Replace the normalization before the classification head.
     model.head_norm = nn.BatchNorm1d(width)
+
+    return model
+
+#Choose the head for a newly created, untrained model
+def configure_head(model, head_type="mlp"):
+    #Keep the original two-layer classification head
+    if head_type == "mlp":
+        return model
+
+    if head_type != "linear":
+        raise ValueError(f"Unknown head type: {head_type}")
+
+    width = model.input_layer.out_features
+    num_classes = model.head_fc2.out_features
+
+    #Bypass the extra hidden layer and its activation
+    model.head_fc1 = nn.Identity()
+    model.head_activation = nn.Identity()
+
+    #Classify the backbone features directly
+    model.head_fc2 = nn.Linear(width, num_classes)
+
+    #This layer was created after the constructor's initialization loop
+    nn.init.xavier_normal_(model.head_fc2.weight)
+    nn.init.zeros_(model.head_fc2.bias)
 
     return model
 
