@@ -15,14 +15,14 @@ TASK_SETTINGS = {
     "mnist": {
         "batch_size": 256,
         "epochs": 30,
-        "width": 522,
+        "width": 392,
         "hidden": 1568,
         "depth": 10,
         "activation": "tanh",
         "optimizer": "adamw",
         "lr": 0.01,
         "momentum": 0.9,
-        "weight_decay": 0.05,
+        "weight_decay": 0.01,
         "step_decay": True
     },
 
