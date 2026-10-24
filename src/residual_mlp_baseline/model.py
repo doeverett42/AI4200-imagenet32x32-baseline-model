@@ -23,7 +23,7 @@ TASK_SETTINGS = {
         "lr": 0.001,
         "momentum": 0.9,
         "weight_decay": 0.01,
-        "step_decay": True,
+        "scheduler": "cosine",
         "normalization": "batch",
         "head_type": "linear", 
         "block_type": "maxout",
@@ -41,7 +41,7 @@ TASK_SETTINGS = {
         "lr": 0.05,
         "momentum": 0.0,
         "weight_decay": 0.0,
-        "step_decay": False
+        "scheduler": "none"
     },
 
     "imagenet32": {
@@ -55,7 +55,7 @@ TASK_SETTINGS = {
         "lr": 0.05,
         "momentum": 0.0,
         "weight_decay": 0.0,
-        "step_decay": False
+        "scheduler": "none"
     }
 }
 #optional activation function changer 

@@ -63,9 +63,17 @@ def train(task, X_train, y_train, seed=0, device="cuda"):
         optimizer = torch.optim.SGD(model.parameters(), lr=settings["lr"], momentum=settings["momentum"], weight_decay=settings["weight_decay"])
     
     #option: define scheduler if passed in
-    scheduler = None 
-    if settings["step_decay"]: 
-        scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=max(1, settings["epochs"] // 4), gamma=0.5) #keep initial steps few
+    # Fall back to the existing settings for the other tasks.
+    scheduler = None
+    scheduler_name = settings.get("scheduler")
+    if scheduler_name == "cosine":
+        scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=settings["epochs"], eta_min=0.00001)
+
+    elif scheduler_name == "step":
+        scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=max(1, settings["epochs"] // 4), gamma=0.5)
+
+    elif scheduler_name != "none":
+        raise ValueError(f"Unknown scheduler: {scheduler_name}")
 
     # 4. The training loop.
     model.train()

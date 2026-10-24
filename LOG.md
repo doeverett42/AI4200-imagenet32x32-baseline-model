@@ -165,7 +165,14 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Change:** Replaced GELU in the residual branches with two-piece maxout. Each branch now calculates two candidates for every hidden feature and keeps the larger. 
 **Why:** The previous changes produced only small improvements. Maxout lets each hidden feature select between separately learned responses, which may help the model recognize different handwriting patterns.
 **Expected:** Validation accuracy may improve, but training will likely take longer. The additional parameters could also increase overfitting. 
-**Result:** 
+**Result:** Test accuracy 98.57% -> 98.54%. Train loss 0.0005. 1.8 min to train. The more complex parameters of maxout performed slightly worse on test accuracy and achived the same training loss. However, the training loss looks more stagnant in areas, so maybe it needs a smoother scheduler decrease. Also, maxout could do better with info across features since there is more complexity to capture them; I will try batch normalization again. 
+
+### Change 22 - mnist - 2026-10-24
+
+**Change:** Replaced LayerNorm with BatchNorm inside each residual branch and before the linear classification head. 
+**Why:** BatchNorm performed worse with my earlier tanh model, but maxout changes the learned features. I want to test whether BatchNorm works better with this new architecture.
+**Expected:** Different training behavior and possibly better accuracy. The earlier BatchNorm result does not necessarily predict its effect when combined with maxout.
+**Result:** Test accuracy 98.54% -> 98.73%. Train loss 0.0006. 2.0 min to train on my local machine with 1 GPU. This is my highest observed accuracy so far. 
 
 ### Change 0 — cifar10 — 2026-10-16
 
