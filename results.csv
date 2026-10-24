@@ -25,3 +25,4 @@ time,package_url,import_name,task,accuracy,train_minutes,seed
 2026-10-22 00:43,git+https://github.com/doeverett42/AI4200-imagenet32x32-baseline-model.git,residual_mlp_baseline,mnist,0.9846,1.6,0
 2026-10-23 19:06,git+https://github.com/doeverett42/AI4200-imagenet32x32-baseline-model.git,residual_mlp_baseline,mnist,0.9846,1.5,0
 2026-10-23 19:13,git+https://github.com/doeverett42/AI4200-imagenet32x32-baseline-model.git,residual_mlp_baseline,mnist,0.9808,6.0,0
+2026-10-23 19:20,git+https://github.com/doeverett42/AI4200-imagenet32x32-baseline-model.git,residual_mlp_baseline,mnist,0.8423,0.3,0
