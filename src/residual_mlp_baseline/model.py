@@ -25,7 +25,9 @@ TASK_SETTINGS = {
         "weight_decay": 0.01,
         "step_decay": True,
         "normalization": "layer",
-        "head_type": "linear"
+        "head_type": "linear", 
+        "block_type": "maxout",
+        "maxout_pieces": 2
     },
 
     "cifar10": {
@@ -111,6 +113,51 @@ def configure_head(model, head_type="mlp"):
     nn.init.zeros_(model.head_fc2.bias)
 
     return model
+
+#Keep the largest candidate for each hidden feature
+#Idea from paper: https://proceedings.mlr.press/v28/goodfellow13.pdf
+class Maxout(nn.Module):
+    def __init__(self, pieces=2):
+        super().__init__()
+
+        if not isinstance(pieces, int) or pieces < 2:
+            raise ValueError("pieces must be an integer of at least 2")
+
+        self.pieces = pieces
+
+    def forward(self, x):
+        #Group the candidates belonging to each hidden feature.
+        #(batch, hidden * pieces) -> (batch, hidden, pieces)
+        x = x.reshape(x.shape[0], -1, self.pieces)
+
+        # Keep the largest candidate in each group.
+        return x.max(dim=-1).values
+
+#Choose the blocks for a newly created, untrained model
+def configure_blocks(model, block_type="mlp", maxout_pieces=2):
+    #Keep the original blocks unchanged
+    if block_type == "mlp":
+        return model
+
+    if block_type != "maxout":
+        raise ValueError(f"Unknown block type: {block_type}")
+
+    for block in model.blocks:
+        width = block.fc1.in_features
+        hidden = block.fc2.in_features
+
+        #Replace activation with competition between learned candidates
+        block.activation = Maxout(maxout_pieces)
+
+        #Produce multiple candidates for each hidden feature
+        block.fc1 = nn.Linear(width, hidden * maxout_pieces)
+
+        #This new layer was created after the constructor's initialization loop, so initialize it here
+        nn.init.xavier_normal_(block.fc1.weight)
+        nn.init.zeros_(block.fc1.bias)
+
+    return model
+
 
 class Block(nn.Module):
     """One residual block:  x + Linear(tanh(Linear(LayerNorm(x))))
