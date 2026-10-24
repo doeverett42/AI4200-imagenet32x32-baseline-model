@@ -118,7 +118,7 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Result:** Validation accuracy 98.08% -> 84.23%% Training loss 1.8235. 0.3 min to train on my local machine with 1 GPU. The validation accuracy and training loss both drastically decreased because the network is probably not deep or complex enough to train in one epoch. 
 
 ### Change 15 - mnist - 2026-10-23
-**Change:** Changed model width to from 392 to 784, depth from 50 to 100, and epochs to 2. 
+**Change:** Changed model width to from 392 to 784 and epochs from 1 to 10. 
 **Why:** Deep networks can process the features in more ways to discover patterns, and they need to be complex enough to learn in one epoch. 
 **Expected:** The model might should improve in training loss and test accuracy due to better complexity for generalization. 
 **Result:** Validation accuracy 84.23% -> % Training loss .  min to train on my local machine with 1 GPU. 
