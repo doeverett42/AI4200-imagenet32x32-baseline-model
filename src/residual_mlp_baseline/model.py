@@ -24,7 +24,7 @@ TASK_SETTINGS = {
         "momentum": 0.9,
         "weight_decay": 0.01,
         "step_decay": True,
-        "normalization": "batch",
+        "normalization": "layer",
         "head_type": "linear", 
         "block_type": "maxout",
         "maxout_pieces": 2

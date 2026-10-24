@@ -160,6 +160,13 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Expected:** Fewer parameters and possibly slightly faster training. Accuracy could improve if the extra head was unnecessary, or decrease if its nonlinear processing was useful.
 **Result:** Test accuracy 98.56% -> 98.57%. Train loss 0.0005. 1.9 min to train. The simpler head achieved essentially the same accuracy with fewer parameters. 
 
+### Change 21 - mnist - 2026-10-24
+
+**Change:** Replaced GELU in the residual branches with two-piece maxout. Each branch now calculates two candidates for every hidden feature and keeps the larger. 
+**Why:** The previous changes produced only small improvements. Maxout lets each hidden feature select between separately learned responses, which may help the model recognize different handwriting patterns.
+**Expected:** Validation accuracy may improve, but training will likely take longer. The additional parameters could also increase overfitting. 
+**Result:** 
+
 ### Change 0 — cifar10 — 2026-10-16
 
 **Change:** Baseline
