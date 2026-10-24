@@ -109,7 +109,13 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Change:** Changed model depth from 10 to 50.
 **Why:** Deep networks can process the features in more ways to discover patterns, and I want to push the depth as far as I can without exeeding training time. 
 **Expected:** The model should stay the same in training loss and maybe will show improvement in test accuracy or just take more time to train.  
-**Result:** Validation accuracy 98.46-> 9%. Train loss 0.0001.  min to train on my local machine with 1 GPU. 
+**Result:** Validation accuracy 98.46%-> 98.08% Training loss 0.0004. 6.0 min to train on my local machine with 1 GPU. The increased depth actually hurt both validation and training loss, which could be a sign of overfitting and training loss oscillation. I will reduce the epochs to see if it generalizes better at the start. 
+
+### Change 14 - mnist - 2026-10-23
+**Change:** Changed model epochs from 30 to 1. 
+**Why:** Deep networks can process the features in more ways to discover patterns, but they only generalize well in the beginning before starting to memorize. 
+**Expected:** The model might drop some in training loss, but it could show improvement in test accuracy due to better generalization. 
+**Result:** Validation accuracy 98.08% -> % Training loss 0.000.  min to train on my local machine with 1 GPU. 
 
 ### Change 0 — cifar10 — 2026-10-16
 
