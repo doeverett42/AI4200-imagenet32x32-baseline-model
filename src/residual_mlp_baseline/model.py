@@ -17,10 +17,10 @@ TASK_SETTINGS = {
         "epochs": 30,
         "width": 392,
         "hidden": 1568,
-        "depth": 12,
+        "depth": 10,
         "activation": "tanh",
         "optimizer": "adamw",
-        "lr": 0.001,
+        "lr": 0.002,
         "momentum": 0.9,
         "weight_decay": 0.01,
         "step_decay": True
