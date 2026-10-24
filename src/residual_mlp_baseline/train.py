@@ -43,7 +43,7 @@ def train(task, X_train, y_train, seed=0, device="cuda"):
     model = configure_blocks(model, block_type=settings.get("block_type", "mlp"), maxout_pieces=settings.get("maxout_pieces", 2))
     model = model.to(device)
 
-    #Apply tanh, then randomly drop 10% of hidden activations for MNIST
+    #Apply activation, then randomly drop 10% of hidden activations for MNIST
     if task == "mnist":
         for block in model.blocks:
             block.activation = nn.Sequential(
