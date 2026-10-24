@@ -17,7 +17,7 @@ TASK_SETTINGS = {
         "epochs": 30,
         "width": 392,
         "hidden": 1568,
-        "depth": 15,
+        "depth": 10,
         "activation": "gelu",
         "optimizer": "adamw",
         "lr": 0.001,
@@ -27,7 +27,7 @@ TASK_SETTINGS = {
         "normalization": "batch",
         "head_type": "linear", 
         "block_type": "maxout",
-        "maxout_pieces": 2
+        "maxout_pieces": 3
     },
 
     "cifar10": {
