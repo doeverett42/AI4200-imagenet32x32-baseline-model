@@ -42,7 +42,8 @@ def train(task, X_train, y_train, seed=0, device="cuda"):
     loader = DataLoader(dataset, batch_size=settings["batch_size"], shuffle=True)
 
     # 3. Choose the loss and the optimizer.
-    loss_fn = nn.CrossEntropyLoss()           # expects raw logits
+    #Slightly soften MNIST targets and leave the other tasks unchanged
+    loss_fn = nn.CrossEntropyLoss(label_smoothing=0.05 if task == "mnist" else 0.0)           # expects raw logits
     if settings["optimizer"] == "adamw": 
         optimizer = torch.optim.AdamW(model.parameters(), lr=settings["lr"], weight_decay=settings["weight_decay"])
     else: 
