@@ -14,10 +14,10 @@ TASKS = {
 TASK_SETTINGS = {
     "mnist": {
         "batch_size": 256,
-        "epochs": 35,
+        "epochs": 30,
         "width": 392,
         "hidden": 1568,
-        "depth": 10,
+        "depth": 8,
         "activation": "tanh",
         "optimizer": "adamw",
         "lr": 0.001,
