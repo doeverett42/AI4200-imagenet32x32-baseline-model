@@ -50,7 +50,7 @@ depth, so complexity was not improving it but perhaps causing too much training 
 
 ### Change 6 - mnist - 2026-10-21
 
-**Change:** Changed learning rate from 0.05 to 0.01. 
+**Change:** Changed learning rate from 0.05 to 0.001. 
 **Why:** Previous learning rate should training loss oscillations. 
 **Expected:** More consisting training loss decrease and convergence to a minimum. 
 **Result:** Validation accuracy 93.43% -> 98.02%. Train loss 0.0072. 1.4 min to train on my local machine with 1 GPU. The AdamW optimizer with learning rate 0.001 showed train loss that decreased drastically throughout, even reaching loss of 0.0004 but it increased again at the end. I will try a bigger scheduler decrease. 
@@ -112,16 +112,25 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Result:** Validation accuracy 98.46%-> 98.08% Training loss 0.0004. 6.0 min to train on my local machine with 1 GPU. The increased depth actually hurt both validation and training loss, which could be a sign of overfitting and training loss oscillation. I will reduce the epochs to see if it generalizes better at the start. 
 
 ### Change 14 - mnist - 2026-10-23
+
 **Change:** Changed model epochs from 30 to 1. 
 **Why:** Deep networks can process the features in more ways to discover patterns, but they only generalize well in the beginning before starting to memorize. 
 **Expected:** The model might drop some in training loss, but it could show improvement in test accuracy due to better generalization. 
 **Result:** Validation accuracy 98.08% -> 84.23%% Training loss 1.8235. 0.3 min to train on my local machine with 1 GPU. The validation accuracy and training loss both drastically decreased because the network is probably not deep or complex enough to train in one epoch. 
 
 ### Change 15 - mnist - 2026-10-23
-**Change:** Changed model width to from 392 to 784 and epochs from 1 to 15. 
-**Why:** Deep networks can process the features in more ways to discover patterns, and they need to be complex enough to learn in one epoch. 
-**Expected:** The model might should improve in training loss and test accuracy due to better complexity for generalization. 
-**Result:** Validation accuracy 84.23% -> % Training loss .  min to train on my local machine with 1 GPU. 
+
+**Change:** Model returned to best previous model in all features. Added label smoothing of 0.05 to MNIST’s cross-entropy loss. 
+**Why:** The model already fits the training data extremely well. I want to see whether slightly softer targets help it recognize unseen digits instead of becoming overly confident about training examples.
+**Expected:** Higher training loss because the targets changed, but possibly better validation accuracy. Too much smoothing could instead reduce accuracy.
+**Result:** Test accuracy 98.46% -> 98.42%. Train loss 0.2830. 1.7 min to train. Label smoothing did not improve accuracy in this run. The higher training loss was expected because smoothing changes the loss calculation; it was close to the minimum possible smoothed loss of 0.2824. I will remove label smoothing and keep my previous best model.
+
+### Change 16 - mnist - 2026-10-23
+
+**Change:** Reduced batch size from 256 to 64. 
+**Why:** I want to see whether more frequent updates help the model learn a solution that performs better on unseen digits.
+**Expected:** More optimizer updates and possibly better validation accuracy, but longer training and potentially less stable loss.
+**Result:** 
 
 ### Change 0 — cifar10 — 2026-10-16
 
