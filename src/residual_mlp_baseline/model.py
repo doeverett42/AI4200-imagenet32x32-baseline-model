@@ -17,7 +17,7 @@ TASK_SETTINGS = {
         "epochs": 30,
         "width": 392,
         "hidden": 1568,
-        "depth": 10,
+        "depth": 15,
         "activation": "gelu",
         "optimizer": "adamw",
         "lr": 0.001,

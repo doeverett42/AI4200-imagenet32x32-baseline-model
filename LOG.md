@@ -174,6 +174,16 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Expected:** Different training behavior and possibly better accuracy. The earlier BatchNorm result does not necessarily predict its effect when combined with maxout.
 **Result:** Test accuracy 98.54% -> 98.73%. Train loss 0.0006. 2.0 min to train on my local machine with 1 GPU. This is my highest observed accuracy so far. 
 
+### Change 23 - mnist - 2026-10-24
+
+**Change:** Replaced StepLR with cosine annealing over 30 epochs, starting at learning rate 0.001 and approaching a minimum of 0.00001. 
+**Why:** StepLR changes the learning rate abruptly every seven epochs. I want to test whether a gradual reduction and smaller final updates let the model refine its learned weights more effectively.
+**Expected:** Smaller learning-rate changes between epochs and possibly lower final training loss. Accuracy might improve, stay similar, or decrease.
+**Result:** Test accuracy 98.73% -> 98.77%. Train loss 0.0006 -> 0.0003. 1.5 min to train on my local machine with 1 GPU. Cosine annealing produced a more gradual training-loss decrease and a lower final loss. The accuracy improvement was small, but this is my highest observed result now.
+
+  
+6:35 PM
+
 ### Change 0 — cifar10 — 2026-10-16
 
 **Change:** Baseline
