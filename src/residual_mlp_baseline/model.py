@@ -14,7 +14,7 @@ TASKS = {
 TASK_SETTINGS = {
     "mnist": {
         "batch_size": 256,
-        "epochs": 10,
+        "epochs": 5,
         "width": 784,
         "hidden": 1568,
         "depth": 100,
@@ -23,7 +23,7 @@ TASK_SETTINGS = {
         "lr": 0.001,
         "momentum": 0.9,
         "weight_decay": 0.01,
-        "step_decay": True
+        "step_decay": False
     },
 
     "cifar10": {
