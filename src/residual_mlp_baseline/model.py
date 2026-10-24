@@ -13,7 +13,7 @@ TASKS = {
 #Give each task independent settings; begin at baseline
 TASK_SETTINGS = {
     "mnist": {
-        "batch_size": 124,
+        "batch_size": 64,
         "epochs": 10,
         "width": 392,
         "hidden": 1568,
