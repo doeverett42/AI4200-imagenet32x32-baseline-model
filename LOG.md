@@ -130,7 +130,14 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Change:** Reduced batch size from 256 to 64. 
 **Why:** I want to see whether more frequent updates help the model learn a solution that performs better on unseen digits.
 **Expected:** More optimizer updates and possibly better validation accuracy, but longer training and potentially less stable loss.
-**Result:** 
+**Result:** Test accuracy 98.46% -> 98.25%. Train loss 0.0001. 4.9 min to train. The smaller batch size still allowed the model to fit the training data, but accuracy decreased and training took roughly three times longer. I will restore batch size 256 and test mild dropout separately.
+
+### Change 17 - mnist - 2026-10-23
+
+**Change:** Added dropout of 0.1 after the hidden activation in each residual branch. 
+**Why:** The model already fits the training data very well. I want to see whether temporarily turning off some hidden activations during training helps it rely less on particular features and recognize unseen digits better.
+**Expected:** Training loss may increase because learning becomes harder while dropout is active. Accuracy could improve, but unnecessary dropout could instead make performance worse.
+**Result:** Test accuracy 98.46% -> 98.49%. Train loss 0.0009. 1.6 min to train. Dropout produced three more correct predictions on the test set without noticeably increasing training time. I will next test dropout of 0.2 with all other settings unchanged.
 
 ### Change 0 — cifar10 — 2026-10-16
 

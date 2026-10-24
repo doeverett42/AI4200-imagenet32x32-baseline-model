@@ -42,7 +42,7 @@ def train(task, X_train, y_train, seed=0, device="cuda"):
         for block in model.blocks:
             block.activation = nn.Sequential(
                 block.activation,
-                nn.Dropout(p=0.1)
+                nn.Dropout(p=0.2)
             )
     
     # 2. Wrap the data so we can loop over shuffled mini-batches.
