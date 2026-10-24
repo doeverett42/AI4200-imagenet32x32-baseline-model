@@ -155,10 +155,10 @@ depth, so complexity was not improving it but perhaps causing too much training 
 
 ### Change 20 - mnist - 2026-10-24
 
-**Change:** 
-**Why:** 
-**Expected:** 
-**Result:** 
+**Change:** Replaced two-layer classification head with a single Linear layer.
+**Why:** The residual backbone already transforms each image into learned features, so I want to see whether those features can be classified directly instead of passing through another hidden layer.
+**Expected:** Fewer parameters and possibly slightly faster training. Accuracy could improve if the extra head was unnecessary, or decrease if its nonlinear processing was useful.
+**Result:** Test accuracy 98.56% -> 98.57%. Train loss 0.0005. 1.9 min to train. The simpler head achieved essentially the same accuracy with fewer parameters. 
 
 ### Change 0 — cifar10 — 2026-10-16
 
