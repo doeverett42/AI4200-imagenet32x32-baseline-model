@@ -37,6 +37,14 @@ def train(task, X_train, y_train, seed=0, device="cuda"):
     # 1. Build the model for this task. Only input size and class count differ.
     model = ResidualMLP(**TASKS[task], width=settings["width"], hidden=settings["hidden"], depth=settings["depth"], activation=settings["activation"]).to(device)
 
+    #Apply tanh, then randomly drop 10% of hidden activations for MNIST
+    if task == "mnist":
+        for block in model.blocks:
+            block.activation = nn.Sequential(
+                block.activation,
+                nn.Dropout(p=0.1)
+            )
+    
     # 2. Wrap the data so we can loop over shuffled mini-batches.
     dataset = TensorDataset(prepare(X_train), torch.as_tensor(y_train).long())
     loader = DataLoader(dataset, batch_size=settings["batch_size"], shuffle=True)
