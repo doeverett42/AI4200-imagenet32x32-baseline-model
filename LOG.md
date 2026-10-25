@@ -251,6 +251,13 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Expected:** Accuracy may improve because the model learns to recognize objects facing either direction. Training loss may remain higher because the training images vary between epochs.
 **Result:** Test accuracy 57.68% -> 56.54%. Final training loss 0.1300. 1.4 min to train on my local machine with 1 GPU. Flipping did not improve accuracy within 30 epochs. Training loss was still decreasing at the end, so I will test whether the augmented model benefits from more training.
 
+### Change 5 - cifar10 - 2026-10-25
+
+**Change:** Increased training from 30 to 60 epochs while keeping horizontal flipping enabled. All other settings stayed unchanged.
+**Why:** The augmented training loss was still falling when the previous run ended. The model may need more updates to learn both original and mirrored images.
+**Expected:** Lower training loss and possibly higher validation accuracy, with roughly twice the training time. 
+**Result:** Test accuracy 56.54% -> 60.38%. Final training loss 0.0003. Training time 1.4 -> 2.2 min. Additional training improved accuracy while flipping stayed unchanged. This also beat the unaugmented 30-epoch model by 2.70 points. 
+
 
 
 ### Change 0 — imagenet32 — 2026-10-16

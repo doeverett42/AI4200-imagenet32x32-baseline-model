@@ -57,7 +57,7 @@ TASK_SETTINGS = {
         "block_type": "maxout",
         "maxout_pieces": 2,
         "augmentation": {
-            "hflip_prob": 0.5
+            "hflip_prob": 0.0
         }
     },
 
