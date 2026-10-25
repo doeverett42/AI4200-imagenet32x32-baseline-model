@@ -230,7 +230,12 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Expected:** Different training behavior and possibly better validation accuracy without adding parameters. SiLU may also perform worse.
 **Result:** Test accuracy 48.62% -> 46.95%. Final epoch train loss 0.2538. 1.8 min to train on my local machine with 1 GPU. SiLU did not improve accuracy under the existing training settings, even though training loss continued decreasing. I will not keep SiLU. 
 
+### Change 2 - cifar10 - 2026-10-25
 
+**Change:** Replaced the tanh residual branches with SwiGLU. Increased width from 128 to 512 and hidden size from 256 to 1024, reduced depth from 30 blocks to 8, and replaced the two-layer classification head with one linear layer. 
+**Why:** CIFAR images contain more complicated patterns than MNIST. A wider model gives the network more features to work with, while SwiGLU learns gates that modify the strength of those features. Fewer residual blocks provide a shorter path through the network, and I removed the two-layer classification head because it didn't prove helpful on MNIST. 
+**Expected:** Accuracy may improve because the model has more capacity and can learn interactions between features. The model has more parameters overall, so training time could increase. 
+**Result:** Test accuracy 48.62% -> 55.10%. Final training loss 0.0007. Training took 1.2 min. The wider, shallower SwiGLU model improved accuracy by 6.48. However, the nearly zero training loss suggests it fits the training examples much better than unseen images. 
 
 ### Change 0 — imagenet32 — 2026-10-16
 
