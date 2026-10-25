@@ -286,6 +286,14 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Expected:** Faster loss reduction at matching epoch counts and possibly higher validation accuracy. 
 **Result:** Test accuracy 63.12% -> 62.22%. Training loss decreased from 0.5293 to 0.2308. Training took 1.8 min. BatchNorm improved training loss but reduced test accuracy, so I will restore LayerNorm.
 
+### Change 10 - cifar10 - 2026-10-25
+
+**Change:** Added rotation data augmentation of 7. 
+**Why:** Data augmentation has proven to yield the best results, and on this data set where images are more variable, more changes to the images might help the model generalize better. 
+**Expected:** Training loss may increase becasue the model has to see more variation with only the same time to learn it; however, test accuracy may increase becasue the varied images help it generalize better. 
+**Result:** Test accuracy 63.12% -> 62.67%. Training loss 0.5375. 2.3 min to train on my local machine with one gpu. Adding rotation augmentation did not help my model in either train loss or test accuracy; maybe because the images are not expected to be rotated like perhaps the written digits could be written slantedly. 
+
+
 
 ### Change 0 — imagenet32 — 2026-10-16
 
