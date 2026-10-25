@@ -293,7 +293,12 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Expected:** Training loss may increase becasue the model has to see more variation with only the same time to learn it; however, test accuracy may increase becasue the varied images help it generalize better. 
 **Result:** Test accuracy 63.12% -> 62.67%. Training loss 0.5375. 2.3 min to train on my local machine with one gpu. Adding rotation augmentation did not help my model in either train loss or test accuracy; maybe because the images are not expected to be rotated like perhaps the written digits could be written slantedly. 
 
+### Change 13 - cifar10 - 2026-10-25
 
+**Change:** Increased the CIFAR model's depth from 8 to 15 residual blocks.
+**Why:** Accuracy remained in the low 60% range. More residual blocks give the model additional stages to process features, which may help it recognize more complicated patterns.
+**Expected:** Possibly higher accuracy from the additional capacity, with longer training time. More depth could also make optimization harder.
+**Result:** Test accuracy 62.92% -> 63.31%. Final training loss 0.6092. Training time 2.3 -> 5.4 min. Accuracy improved by 0.39 percentage points over the previous run, but training loss increased and training time more than doubled. The accuracy gain was modest compared with the additional training cost.
 
 ### Change 0 — imagenet32 — 2026-10-16
 
