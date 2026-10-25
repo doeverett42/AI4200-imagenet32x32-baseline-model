@@ -54,7 +54,8 @@ TASK_SETTINGS = {
         "scheduler": "none",
         "normalization": "layer",
         "head_type": "linear",
-        "block_type": "swiglu",
+        "block_type": "maxout",
+        "maxout_pieces": 2,
         "augmentation": {}
     },
 
