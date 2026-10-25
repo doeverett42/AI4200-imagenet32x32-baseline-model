@@ -258,6 +258,12 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Expected:** Lower training loss and possibly higher validation accuracy, with roughly twice the training time. 
 **Result:** Test accuracy 56.54% -> 60.38%. Final training loss 0.0003. Training time 1.4 -> 2.2 min. Additional training improved accuracy while flipping stayed unchanged. This also beat the unaugmented 30-epoch model by 2.70 points. 
 
+### Change 6 - cifar10 - 2026-10-25
+
+**Change:** Added random horizontal and vertical shifts of up to two pixels with reflection padding. 
+**Why:** The current model fits the training images extremely well. Small shifts may help it recognize objects in different positions instead of depending too heavily on their exact pixel locations.
+**Expected:** Test accuracy may improve because the model encounters more variations of each training image. Training loss may stay higher because those images are harder to fit. 
+**Result:** Test accuracy 60.38% -> 59.35%. Final training loss 0.4660. Training took 2.2 min. Adding two-pixel shifts did not improve accuracy within 60 epochs. Training loss was still decreasing, so I will try momentum to speed it up. 
 
 
 ### Change 0 — imagenet32 — 2026-10-16

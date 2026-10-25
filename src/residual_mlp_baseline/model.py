@@ -48,7 +48,7 @@ TASK_SETTINGS = {
         "activation": "tanh",
         "optimizer": "sgd",
         "lr": 0.05,
-        "momentum": 0.0,
+        "momentum": 0.9,
         "weight_decay": 0.0,
         "dropout": 0, 
         "scheduler": "none",
