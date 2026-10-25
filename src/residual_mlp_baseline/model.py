@@ -43,7 +43,7 @@ TASK_SETTINGS = {
         "batch_size": 164,
         "epochs": 60,
         "width": 512,
-        "hidden": 1568,
+        "hidden": 1024,
         "depth": 8,
         "activation": "tanh",
         "optimizer": "sgd",
