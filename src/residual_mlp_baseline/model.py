@@ -40,8 +40,8 @@ TASK_SETTINGS = {
     },
 
     "cifar10": {
-        "batch_size": 256,
-        "epochs": 100,
+        "batch_size": 164,
+        "epochs": 60,
         "width": 512,
         "hidden": 1568,
         "depth": 8,
