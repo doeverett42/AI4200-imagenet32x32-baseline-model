@@ -214,7 +214,7 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Change:** Added 0.02 random noise augmentation.
 **Why:**  Given that the model improved from data translation & rotation, it should also generalize more given random noise. 
 **Expected:** Training loss may increase due to more data augmentation, but test accuracy should improve with more data variation to learn from random noise. 
-**Result:** Test Accuracy: 99.27% -> 99.%. Train loss 0.0149 -> 0.0.  min to train on my local machine with 1 GPU. 
+**Result:** Test Accuracy: 99.27% -> 99.14%. Train loss 0.0149 -> 0.0160. 2.1 min to train on my local machine with 1 GPU. Adding random noise slighty worsened both training loss and test accuracy. 
 
 
 ### Change 0 — cifar10 — 2026-10-16
