@@ -295,10 +295,18 @@ depth, so complexity was not improving it but perhaps causing too much training 
 
 ### Change 13 - cifar10 - 2026-10-25
 
-**Change:** Increased the CIFAR model's depth from 8 to 15 residual blocks.
+**Change:** Increased the CIFAR model's depth from 8 to 30 residual blocks.
 **Why:** Accuracy remained in the low 60% range. More residual blocks give the model additional stages to process features, which may help it recognize more complicated patterns.
 **Expected:** Possibly higher accuracy from the additional capacity, with longer training time. More depth could also make optimization harder.
-**Result:** Test accuracy 62.92% -> 63.31%. Final training loss 0.6092. Training time 2.3 -> 5.4 min. Accuracy improved by 0.39 percentage points over the previous run, but training loss increased and training time more than doubled. The accuracy gain was modest compared with the additional training cost.
+**Result:** Test accuracy 62.92% -> 63.07%. Final training loss 0.6362. Training time 2.3 -> 6.0 min. Accuracy was slightly worse than the previous best run, and training loss increased and training time more than doubled. I will first try giving more augmentation before reverting. 
+
+### Change 14 - cifar10 - 2026-10-25
+
+**Change:** Tested the 15-block CIFAR model with random rotation between -7 and +7 degrees and Gaussian noise with noise_std = 0.01. 
+**Why:** I wanted to see whether rotation and mild pixel noise for a largere augmentation treatment could help the deeper model recognize more variations of the same objects and generalize better. 
+**Expected:** Possibly higher test accuracy from the additional image variations. Training loss may remain higher because the augmented examples are harder to fit within the same 60 epochs.
+**Result:** Test accuracy 63.31% -> 61.87%. Final training loss 0.6046. 2.8 min. Accuracy decreased by 1.44 percentage points despite slightly lower training loss. This combination did not improve accuracy. Because rotation and noise strength changed together, I cannot determine their individual effects from this run.
+
 
 ### Change 0 — imagenet32 — 2026-10-16
 
