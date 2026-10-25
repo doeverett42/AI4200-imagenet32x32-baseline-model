@@ -204,8 +204,8 @@ depth, so complexity was not improving it but perhaps causing too much training 
 
 ### Change 27 — mnist — 2026-10-24
 
-**Change:** Increased epochs from 40 to 50. Added 7 degree rotation shift. 
-**Why:**  Given that the model improved from data translation, it should also generalize more given rotation. To process this augmented data it needs more time so more epochs. 
+**Change:** Added 7 degree rotation shift. Increased epochs from 40 to 45.  
+**Why:**  Given that the model improved from data translation, it should also generalize more given rotation. More epochs for more time to learn.
 **Expected:** Training loss may increase due to more data augmentation, but test accuracy should improve with more data variation to learn from. 
 **Result:** Test Accuracy: 99.19% -> 99.%%. Train loss 0.0122 -> 0.0.  min to train on my local machine with 1 GPU. 
 

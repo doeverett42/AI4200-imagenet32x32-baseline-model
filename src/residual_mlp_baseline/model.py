@@ -14,7 +14,7 @@ TASKS = {
 TASK_SETTINGS = {
     "mnist": {
         "batch_size": 256,
-        "epochs": 50,
+        "epochs": 45,
         "width": 392,
         "hidden": 1568,
         "depth": 10,
