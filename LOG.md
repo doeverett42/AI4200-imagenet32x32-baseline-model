@@ -235,7 +235,16 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Change:** Replaced the tanh residual branches with SwiGLU. Increased width from 128 to 512 and hidden size from 256 to 1024, reduced depth from 30 blocks to 8, and replaced the two-layer classification head with one linear layer. 
 **Why:** CIFAR images contain more complicated patterns than MNIST. A wider model gives the network more features to work with, while SwiGLU learns gates that modify the strength of those features. Fewer residual blocks provide a shorter path through the network, and I removed the two-layer classification head because it didn't prove helpful on MNIST. 
 **Expected:** Accuracy may improve because the model has more capacity and can learn interactions between features. The model has more parameters overall, so training time could increase. 
-**Result:** Test accuracy 48.62% -> 55.10%. Final training loss 0.0007. Training took 1.2 min. The wider, shallower SwiGLU model improved accuracy by 6.48. However, the nearly zero training loss suggests it fits the training examples much better than unseen images. 
+**Result:** Test accuracy 48.62% -> 55.10%. Final training loss 0.0007. Training took 1.2 min. The wider, shallower SwiGLU model improved accuracy by 6.48. However, the nearly zero training loss suggests it fits the training examples much better than unseen images.
+
+### Change 3 - cifar10 - 2026-10-25
+
+**Change:** Replaced SwiGLU with Maxout using two candidates per hidden feature. 
+**Why:** I wanted to compare Maxout against SwiGLU using the same architecture size and number of parameters. Maxout selects the largest learned candidate for each feature, while SwiGLU multiplies learned values by learned gate. 
+**Expected:** Accuracy may improve or decrease depending on which approach learns more useful features. I think SwiGLU will perform better since more parameters are being used on any one given example. 
+**Result:** Test accuracy 55.10% -> 57.68%. Final training loss 0.0006. Training time 1.2 -> 1.0 min. Maxout performed better under these settings, so I will keep it for the next experiment. Both models reached nearly zero training loss, so I will focus on augmenting the data. 
+
+
 
 ### Change 0 — imagenet32 — 2026-10-16
 

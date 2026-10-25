@@ -56,7 +56,9 @@ TASK_SETTINGS = {
         "head_type": "linear",
         "block_type": "maxout",
         "maxout_pieces": 2,
-        "augmentation": {}
+        "augmentation": {
+            "hflip_prob": 0.5
+        }
     },
 
     "imagenet32": {
