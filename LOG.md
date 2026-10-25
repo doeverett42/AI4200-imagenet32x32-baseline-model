@@ -279,6 +279,13 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Expected:** Faster reduction in training loss and possibly higher validation accuracy. Training time may increase or decrease.
 **Result:** Test accuracy 63.12% -> 62.47%. Final training loss 0.5737. Training time 1.6 -> 2.0 min. AdamW did not improve accuracy or training time with these settings, so I will return to SGD with momentum.
 
+### Change 9 - cifar10 - 2026-10-25
+
+**Change:** Replaced LayerNorm with BatchNorm in every residual block and before the classification head. 
+**Why:** Increasing the learning rate did not produce the faster learning I wanted. BatchNorm changes how features are normalized across training examples and may make the model easier to optimize.
+**Expected:** Faster loss reduction at matching epoch counts and possibly higher validation accuracy. 
+**Result:** Test accuracy 63.12% -> 62.22%. Training loss decreased from 0.5293 to 0.2308. Training took 1.8 min. BatchNorm improved training loss but reduced test accuracy, so I will restore LayerNorm.
+
 
 ### Change 0 — imagenet32 — 2026-10-16
 

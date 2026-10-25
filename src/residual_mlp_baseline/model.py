@@ -52,13 +52,14 @@ TASK_SETTINGS = {
         "weight_decay": 0.0,
         "dropout": 0, 
         "scheduler": "none",
-        "normalization": "batch",
+        "normalization": "layer",
         "head_type": "linear",
         "block_type": "maxout",
         "maxout_pieces": 2,
         "augmentation": {
             "hflip_prob": 0.5,
             "translate": 2, 
+            "rotation": 7,
             "padding_mode": "reflection"  # Fill exposed edges with reflected pixels    
         }
     },
