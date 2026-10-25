@@ -40,7 +40,7 @@ TASK_SETTINGS = {
     },
 
     "cifar10": {
-        "batch_size": 164,
+        "batch_size": 256,
         "epochs": 60,
         "width": 512,
         "hidden": 1024,
@@ -52,7 +52,7 @@ TASK_SETTINGS = {
         "weight_decay": 0.0,
         "dropout": 0, 
         "scheduler": "none",
-        "normalization": "layer",
+        "normalization": "batch",
         "head_type": "linear",
         "block_type": "maxout",
         "maxout_pieces": 2,
