@@ -41,7 +41,7 @@ TASK_SETTINGS = {
 
     "cifar10": {
         "batch_size": 256,
-        "epochs": 60,
+        "epochs": 100,
         "width": 512,
         "hidden": 1568,
         "depth": 8,
@@ -50,7 +50,7 @@ TASK_SETTINGS = {
         "lr": 0.05,
         "momentum": 0.9,
         "weight_decay": 0.0,
-        "dropout": 0.1, 
+        "dropout": 0, 
         "scheduler": "none",
         "normalization": "layer",
         "head_type": "linear",
