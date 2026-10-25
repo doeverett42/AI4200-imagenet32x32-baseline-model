@@ -44,7 +44,7 @@ TASK_SETTINGS = {
         "epochs": 60,
         "width": 512,
         "hidden": 1024,
-        "depth": 30,
+        "depth": 15,
         "activation": "tanh",
         "optimizer": "sgd",
         "lr": 0.05,
