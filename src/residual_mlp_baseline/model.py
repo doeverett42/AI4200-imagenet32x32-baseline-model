@@ -44,7 +44,7 @@ TASK_SETTINGS = {
         "width": 128,
         "hidden": 256,
         "depth": 30,
-        "activation": "tanh",
+        "activation": "silu",
         "optimizer": "sgd",
         "lr": 0.05,
         "momentum": 0.0,
@@ -75,7 +75,8 @@ def make_activation(name):
     activations = {
         "tanh": nn.Tanh,
         "relu": nn.ReLU,
-        "gelu": nn.GELU
+        "gelu": nn.GELU,
+        "silu": nn.SiLU
     }
     if name not in activations:
         raise ValueError(f"Unknown activation: {name}")
