@@ -188,6 +188,20 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Expected:** Training loss will slightly increase since less updates are made, but test accuracy could increase if this cuts the model's training prior to memorizing. 
 **Result:** Test Accuracy: 98.77% -> 98.82%. Train loss 0.0003 -> 0.0004. 1.3 min to train on my local machine with 1 GPU. The model performed better on test accuracy because it was probably stopped from updating before it started memorizing. 
 
+### Change 25 - mnist - 2026-10-24
+
+**Change:** Added training-only random horizontal and vertical shifts of up to two pixels. Rotation, flipping, and noise remained disabled. 
+**Why:** The model already fits the original training images very closely. I want to test whether recognizing digits in slightly different positions helps it classify unseen handwriting without relying too strongly on exact pixel locations.
+**Expected:** Training loss may increase because the model sees changing versions of the images. Validation accuracy may improve if learning these positional variations helps generalization, but unnecessary shifts or clipping near image edges could reduce accuracy. Prediction and parameter count remain unchanged.
+**Result:** Test accuracy 98.82% -> 99.01%. Train loss 0.0004 -> 0.0181. 1.4 min to train on my local machine with 1 GPU. Training loss increased while learning from randomly shifted images, but test accuracy improved by 0.19 percentage points. 
+
+### Change 26 — mnist — 2026-10-24
+
+**Change:** Increased epochs from 25 to 40. 
+**Why:** Now that the training loss is higher due to more augmented data to learn from, the model needs more time to generalize the patterns.  
+**Expected:** Training loss will decrease significantly and test accuracy may increase as a result from more generalizing time unless it starts to memorize again.
+**Result:** Test Accuracy: 99.01% -> %. Train loss 0.0181 -> .  min to train on my local machine with 1 GPU. 
+
 
 ### Change 0 — cifar10 — 2026-10-16
 
