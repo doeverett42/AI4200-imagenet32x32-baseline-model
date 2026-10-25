@@ -44,13 +44,18 @@ def train(task, X_train, y_train, seed=0, device="cuda"):
     model = configure_blocks(model, block_type=settings.get("block_type", "mlp"), maxout_pieces=settings.get("maxout_pieces", 2))
     model = model.to(device)
 
-    #Apply activation, then randomly drop 10% of hidden activations for MNIST
-    if task == "mnist":
+    #Read the dropout rate selected for this task
+    #If the setting is missing, leave dropout disabled
+    dropout_p = settings.get("dropout", 0.0)
+
+    if not 0 <= dropout_p <= 1:
+        raise ValueError("dropout must be between 0 and 1")
+
+    #Apply dropout after each residual branch's hidden activation
+    #A rate of zero leaves the original activation unchanged
+    if dropout_p > 0:
         for block in model.blocks:
-            block.activation = nn.Sequential(
-                block.activation,
-                nn.Dropout(p=0.1)
-            )
+            block.activation = nn.Sequential(block.activation, nn.Dropout(p=dropout_p))
     
     # 2. Wrap the data so we can loop over shuffled mini-batches.
     dataset = TensorDataset(prepare(X_train), torch.as_tensor(y_train).long())

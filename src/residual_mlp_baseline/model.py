@@ -14,7 +14,7 @@ TASKS = {
 TASK_SETTINGS = {
     "mnist": {
         "batch_size": 256,
-        "epochs": 50,
+        "epochs": 40,
         "width": 392,
         "hidden": 1568,
         "depth": 10,
@@ -23,6 +23,7 @@ TASK_SETTINGS = {
         "lr": 0.001,
         "momentum": 0.9,
         "weight_decay": 0.01,
+        "dropout": 0.05,
         "scheduler": "cosine",
         "normalization": "batch",
         "head_type": "linear", 
@@ -48,6 +49,7 @@ TASK_SETTINGS = {
         "lr": 0.05,
         "momentum": 0.0,
         "weight_decay": 0.0,
+        "dropout": 0, 
         "scheduler": "none",
         "augmentation": {}
     },
@@ -63,6 +65,7 @@ TASK_SETTINGS = {
         "lr": 0.05,
         "momentum": 0.0,
         "weight_decay": 0.0,
+        "dropout": 0,
         "scheduler": "none",
         "augmentation": {}
     }
