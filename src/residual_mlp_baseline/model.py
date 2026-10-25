@@ -23,7 +23,7 @@ TASK_SETTINGS = {
         "lr": 0.001,
         "momentum": 0.9,
         "weight_decay": 0.01,
-        "dropout": 0.05,
+        "dropout": 0.0,
         "scheduler": "cosine",
         "normalization": "batch",
         "head_type": "linear", 
