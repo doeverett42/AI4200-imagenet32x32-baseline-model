@@ -32,7 +32,7 @@ TASK_SETTINGS = {
             "rotation": 7, 
             "translate": 2, 
             "hflip_prob": 0.0, 
-            "noise_std": 0.0, 
+            "noise_std": 0.02, 
             "padding_mode": "zeros"   # Fill exposed areas with black
         }   
     },

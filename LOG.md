@@ -202,12 +202,19 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Expected:** Training loss will decrease significantly and test accuracy may increase as a result from more generalizing time unless it starts to memorize again.
 **Result:** Test Accuracy: 99.01% -> 99.19%%. Train loss 0.0181 -> 0.0122. 2.9 min to train on my local machine with 1 GPU. The training loss gradually increased even more along with test accuracy, but so did training time. 
 
-### Change 27 — mnist — 2026-10-24
+### Change 27 — mnist — 2026-10-25
 
-**Change:** Added 7 degree rotation shift. Increased epochs from 40 to 45.  
-**Why:**  Given that the model improved from data translation, it should also generalize more given rotation. More epochs for more time to learn.
-**Expected:** Training loss may increase due to more data augmentation, but test accuracy should improve with more data variation to learn from. 
-**Result:** Test Accuracy: 99.19% -> 99.%%. Train loss 0.0122 -> 0.0.  min to train on my local machine with 1 GPU. 
+**Change:** Added 7 degree rotation shift. 
+**Why:**  Given that the model improved from data translation, it should also generalize more given rotation. 
+**Expected:** Training loss may increase due to more data augmentation, but test accuracy should improve with more data variation to learn from rotation. 
+**Result:** Test Accuracy: 99.19% -> 99.27%. Train loss 0.0122 -> 0.0149. 2.5 min to train on my local machine with 1 GPU. Training loss slightly worsened, but test accuracy drastically improved, meaning more augmentationed helped generalization. 
+
+### Change 28 — mnist — 2026-10-25
+
+**Change:** Added 0.02 random noise augmentation.
+**Why:**  Given that the model improved from data translation & rotation, it should also generalize more given random noise. 
+**Expected:** Training loss may increase due to more data augmentation, but test accuracy should improve with more data variation to learn from random noise. 
+**Result:** Test Accuracy: 99.27% -> 99.%. Train loss 0.0149 -> 0.0.  min to train on my local machine with 1 GPU. 
 
 
 ### Change 0 — cifar10 — 2026-10-16
