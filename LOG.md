@@ -272,7 +272,12 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Expected:** Faster reduction in training loss and possibly better validation accuracy than the translation-only run. 
 **Result:** Test accuracy 59.35% -> 63.12%. Final training loss 0.5293. 1.6 to train on my local machine with one GPU. The model significantly improved in test accuracy while still being slightly higher with training loss. This suggests the model learned more with momentum but perhaps has more generalizations to learn. 
 
+### Change 8 - cifar10 - 2026-10-25
 
+**Change:** Replaced SGD with AdamW and changed the learning rate from 0.05 to 0.001.
+**Why:** Training loss was still decreasing after 60 epochs with SGD. AdamW adjusts update sizes for individual weights, which may help the model learn useful features more quickly.
+**Expected:** Faster reduction in training loss and possibly higher validation accuracy. Training time may increase or decrease.
+**Result:** Test accuracy 63.12% -> 62.47%. Final training loss 0.5737. Training time 1.6 -> 2.0 min. AdamW did not improve accuracy or training time with these settings, so I will return to SGD with momentum.
 
 
 ### Change 0 — imagenet32 — 2026-10-16
