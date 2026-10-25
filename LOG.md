@@ -265,6 +265,15 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Expected:** Test accuracy may improve because the model encounters more variations of each training image. Training loss may stay higher because those images are harder to fit. 
 **Result:** Test accuracy 60.38% -> 59.35%. Final training loss 0.4660. Training took 2.2 min. Adding two-pixel shifts did not improve accuracy within 60 epochs. Training loss was still decreasing, so I will try momentum to speed it up. 
 
+### Change 7 - cifar10 - 2026-10-25
+
+**Change:** Increased SGD momentum from 0.0 to 0.9.
+**Why:** The translated model's training loss was still decreasing at epoch 60 and ended at 0.4660. Momentum carries information from previous updates, which may help the model learn these varied images more quickly.
+**Expected:** Faster reduction in training loss and possibly better validation accuracy than the translation-only run. 
+**Result:** Test accuracy 59.35% -> 63.12%. Final training loss 0.5293. 1.6 to train on my local machine with one GPU. The model significantly improved in test accuracy while still being slightly higher with training loss. This suggests the model learned more with momentum but perhaps has more generalizations to learn. 
+
+
+
 
 ### Change 0 — imagenet32 — 2026-10-16
 
