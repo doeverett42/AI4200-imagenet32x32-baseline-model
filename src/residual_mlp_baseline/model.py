@@ -27,7 +27,14 @@ TASK_SETTINGS = {
         "normalization": "batch",
         "head_type": "linear", 
         "block_type": "maxout",
-        "maxout_pieces": 2
+        "maxout_pieces": 2,
+        "augmentation": {
+            "rotation": 0, 
+            "translate": 2, 
+            "hflip_prob": 0.0, 
+            "noise_std": 0.0, 
+            "padding_mode": "zeros"   # Fill exposed areas with black
+        }   
     },
 
     "cifar10": {
@@ -41,7 +48,8 @@ TASK_SETTINGS = {
         "lr": 0.05,
         "momentum": 0.0,
         "weight_decay": 0.0,
-        "scheduler": "none"
+        "scheduler": "none",
+        "augmentation": {}
     },
 
     "imagenet32": {
@@ -55,7 +63,8 @@ TASK_SETTINGS = {
         "lr": 0.05,
         "momentum": 0.0,
         "weight_decay": 0.0,
-        "scheduler": "none"
+        "scheduler": "none",
+        "augmentation": {}
     }
 }
 #optional activation function changer 

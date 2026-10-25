@@ -3,6 +3,7 @@ import torch.nn as nn
 from torch.utils.data import DataLoader, TensorDataset
 
 from .model import TASKS, TASK_SETTINGS, ResidualMLP, configure_normalization, configure_head, configure_blocks
+from .augmentation import augment_batch
 
 
 # Baseline settings. Deliberately plain so they are easy to beat:
@@ -81,6 +82,9 @@ def train(task, X_train, y_train, seed=0, device="cuda"):
         total_loss = 0.0
         for X_batch, y_batch in loader:
             X_batch, y_batch = X_batch.to(device), y_batch.to(device)
+
+            #Use this task's augmentation settings
+            X_batch = augment_batch(X_batch, settings.get("augmentation", {}))
 
             logits = model(X_batch)           # forward pass
             loss = loss_fn(logits, y_batch)   # how wrong are we?

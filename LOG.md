@@ -181,8 +181,13 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Expected:** Smaller learning-rate changes between epochs and possibly lower final training loss. Accuracy might improve, stay similar, or decrease.
 **Result:** Test accuracy 98.73% -> 98.77%. Train loss 0.0006 -> 0.0003. 1.5 min to train on my local machine with 1 GPU. Cosine annealing produced a more gradual training-loss decrease and a lower final loss. The accuracy improvement was small, but this is my highest observed result now.
 
-  
-6:35 PM
+### Change 24 — mnist — 2026-10-24
+
+**Change:** Reduced epochs from 30 to 25. 
+**Why:** The last five epochs showed minimal gains in training loss and showed signs of possibly memorizing trianing rather than generalizing. 
+**Expected:** Training loss will slightly increase since less updates are made, but test accuracy could increase if this cuts the model's training prior to memorizing. 
+**Result:** Test Accuracy: 98.77% -> 98.82%. Train loss 0.0003 -> 0.0004. 1.3 min to train on my local machine with 1 GPU. The model performed better on test accuracy because it was probably stopped from updating before it started memorizing. 
+
 
 ### Change 0 — cifar10 — 2026-10-16
 
