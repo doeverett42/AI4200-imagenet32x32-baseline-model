@@ -70,7 +70,7 @@ TASK_SETTINGS = {
         "epochs": 10,
         "width": 128,
         "hidden": 256,
-        "depth": 30,
+        "depth": 15,
         "activation": "tanh",
         "optimizer": "sgd",
         "lr": 0.05,
