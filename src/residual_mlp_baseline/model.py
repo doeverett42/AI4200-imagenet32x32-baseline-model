@@ -57,7 +57,9 @@ TASK_SETTINGS = {
         "block_type": "maxout",
         "maxout_pieces": 2,
         "augmentation": {
-            "hflip_prob": 0.0
+            "hflip_prob": 0.5,
+            "translate": 2, 
+            "padding_mode": "reflection"  # Fill exposed edges with reflected pixels    
         }
     },
 
