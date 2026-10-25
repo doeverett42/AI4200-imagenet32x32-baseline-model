@@ -59,8 +59,8 @@ TASK_SETTINGS = {
         "augmentation": {
             "hflip_prob": 0.5,
             "translate": 2, 
-            "rotation": 0,
-            "noise_std": 0.0,
+            "rotation": 7,
+            "noise_std": 0.02,
             "padding_mode": "reflection"  # Fill exposed edges with reflected pixels    
         }
     },
