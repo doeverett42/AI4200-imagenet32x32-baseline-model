@@ -29,7 +29,7 @@ TASK_SETTINGS = {
         "block_type": "maxout",
         "maxout_pieces": 2,
         "augmentation": {
-            "rotation": 0, 
+            "rotation": 7, 
             "translate": 2, 
             "hflip_prob": 0.0, 
             "noise_std": 0.0, 

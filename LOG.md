@@ -200,7 +200,14 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Change:** Increased epochs from 25 to 40. 
 **Why:** Now that the training loss is higher due to more augmented data to learn from, the model needs more time to generalize the patterns.  
 **Expected:** Training loss will decrease significantly and test accuracy may increase as a result from more generalizing time unless it starts to memorize again.
-**Result:** Test Accuracy: 99.01% -> %. Train loss 0.0181 -> .  min to train on my local machine with 1 GPU. 
+**Result:** Test Accuracy: 99.01% -> 99.19%%. Train loss 0.0181 -> 0.0122. 2.9 min to train on my local machine with 1 GPU. The training loss gradually increased even more along with test accuracy, but so did training time. 
+
+### Change 27 — mnist — 2026-10-24
+
+**Change:** Increased epochs from 40 to 50. 
+**Why:**  
+**Expected:** 
+**Result:** Test Accuracy: 99.01% -> 99.19%%. Train loss 0.0181 -> 0.0122. 2.9 min to train on my local machine with 1 GPU. The training loss gradually increased even more along with test accuracy, but so did training time. 
 
 
 ### Change 0 — cifar10 — 2026-10-16
