@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
 
 # Each task differs only in its input size and its number of classes.
@@ -41,16 +42,19 @@ TASK_SETTINGS = {
     "cifar10": {
         "batch_size": 256,
         "epochs": 30,
-        "width": 128,
-        "hidden": 256,
-        "depth": 30,
-        "activation": "silu",
+        "width": 512,
+        "hidden": 1024,
+        "depth": 8,
+        "activation": "tanh",
         "optimizer": "sgd",
         "lr": 0.05,
         "momentum": 0.0,
         "weight_decay": 0.0,
         "dropout": 0, 
         "scheduler": "none",
+        "normalization": "layer",
+        "head_type": "linear",
+        "block_type": "swiglu",
         "augmentation": {}
     },
 
@@ -146,26 +150,39 @@ class Maxout(nn.Module):
         # Keep the largest candidate in each group.
         return x.max(dim=-1).values
 
-#Choose the blocks for a newly created, untrained model
+#Multiply learned values by learned SiLU gates
+class SwiGLU(nn.Module):
+    def forward(self, x):
+        #fc1 produces two halves, each containing hidden features
+        gate, value = x.chunk(2, dim=-1)
+
+        #Apply SiLU to the gate, then multiply corresponding features
+        return F.silu(gate) * value
+
+#Choose the hidden computation for a fresh, untrained model
 def configure_blocks(model, block_type="mlp", maxout_pieces=2):
-    #Keep the original blocks unchanged
     if block_type == "mlp":
         return model
 
-    if block_type != "maxout":
+    if block_type not in ("maxout", "swiglu"):
         raise ValueError(f"Unknown block type: {block_type}")
 
     for block in model.blocks:
         width = block.fc1.in_features
         hidden = block.fc2.in_features
 
-        #Replace activation with competition between learned candidates
-        block.activation = Maxout(maxout_pieces)
+        if block_type == "maxout":
+            #Generate candidates; Maxout keeps the largest per feature
+            block.activation = Maxout(maxout_pieces)
+            projected_features = hidden * maxout_pieces
+        else:
+            #Generate one gate and one value per hidden feature
+            block.activation = SwiGLU()
+            projected_features = 2 * hidden
 
-        #Produce multiple candidates for each hidden feature
-        block.fc1 = nn.Linear(width, hidden * maxout_pieces)
+        block.fc1 = nn.Linear(width, projected_features)
 
-        #This new layer was created after the constructor's initialization loop, so initialize it here
+        #This replacement was created after the constructor's init loop
         nn.init.xavier_normal_(block.fc1.weight)
         nn.init.zeros_(block.fc1.bias)
 

@@ -216,14 +216,21 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Expected:** Training loss may increase due to more data augmentation, but test accuracy should improve with more data variation to learn from random noise. 
 **Result:** Test Accuracy: 99.27% -> 99.14%. Train loss 0.0149 -> 0.0160. 2.1 min to train on my local machine with 1 GPU. Adding random noise slighty worsened both training loss and test accuracy. I will remove random noise. 
 
-
-
 ### Change 0 — cifar10 — 2026-10-16
 
 **Change:** Baseline
 **Why:** NA
 **Expected:** Baseline results 
 **Result:** Test Accuracy: 48.62% 4.8 min to train on my local machine with 1 GPU. 
+
+### Change 1 - cifar10 - 2026-10-25
+
+**Change:** Replaced tanh with SiLU in the residual branches and classification head. 
+**Why:** The lecture described SiLU as a smooth, input-dependent gate. I want to test whether this different nonlinear response helps the model learn useful features before making a larger architectural change.
+**Expected:** Different training behavior and possibly better validation accuracy without adding parameters. SiLU may also perform worse.
+**Result:** Test accuracy 48.62% -> 46.95%. Final epoch train loss 0.2538. 1.8 min to train on my local machine with 1 GPU. SiLU did not improve accuracy under the existing training settings, even though training loss continued decreasing. I will not keep SiLU. 
+
+
 
 ### Change 0 — imagenet32 — 2026-10-16
 
