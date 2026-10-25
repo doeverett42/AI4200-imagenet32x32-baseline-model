@@ -216,6 +216,13 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Expected:** Training loss may increase due to more data augmentation, but test accuracy should improve with more data variation to learn from random noise. 
 **Result:** Test Accuracy: 99.27% -> 99.14%. Train loss 0.0149 -> 0.0160. 2.1 min to train on my local machine with 1 GPU. Adding random noise slighty worsened both training loss and test accuracy. 
 
+### Change 28 — mnist — 2026-10-25
+
+**Change:** Reduce random noise from 0.02 to 0.01. 
+**Why:**  The model actually worsened from random noise augmentation so maybe the used amount was too strong. 
+**Expected:** Training loss may increase still due to the added data augmentation, but test accuracy should improve with less variation that could disrupt patterns. 
+**Result:** Test Accuracy: 99.14% -> 99.%. Train loss 0.0160 -> .  min to train on my local machine with 1 GPU. 
+
 
 ### Change 0 — cifar10 — 2026-10-16
 
