@@ -14,7 +14,7 @@ TASKS = {
 TASK_SETTINGS = {
     "mnist": {
         "batch_size": 256,
-        "epochs": 35,
+        "epochs": 40,
         "width": 392,
         "hidden": 1568,
         "depth": 10,
@@ -32,7 +32,7 @@ TASK_SETTINGS = {
             "rotation": 7, 
             "translate": 2, 
             "hflip_prob": 0.0, 
-            "noise_std": 0.01, 
+            "noise_std": 0.0, 
             "padding_mode": "zeros"   # Fill exposed areas with black
         }   
     },
