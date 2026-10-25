@@ -27,7 +27,7 @@ TASK_SETTINGS = {
         "normalization": "batch",
         "head_type": "linear", 
         "block_type": "maxout",
-        "maxout_pieces": 3
+        "maxout_pieces": 2
     },
 
     "cifar10": {
