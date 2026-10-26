@@ -363,3 +363,9 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Expected:** Faster reduction in training loss and possibly higher accuracy within the same 10 epochs, with similar training time.
 **Result:** Test accuracy 13.54% -> 17.29%. Final training loss 4.1471. Training took 12.2 min on remote hpc cluster. With momentum, the model reached a lower training loss after five epochs than the previous model reached after ten. Momentum improved both training progress and test accuracy.
 
+### Change 3 - imagenet32 - 2026-10-26
+
+**Change:** Replaced tanh with GELU in the patch model's token-mixing and channel-mixing branches. 
+**Why:** Tanh flattens for large inputs, which can weaken the signal used to update weights. GELU does not cap large positive outputs, and it's recommended by the mlp-mixer paper, so I want to include it. 
+**Expected:** Possibly faster reduction in training loss and higher accuracy within the same 10 epochs.
+**Result:** Test accuracy 17.29% -> 21.42%. Training loss 3.7395. 10.4 min on the remote HPC cluster. GELU improved both training loss and test accuracy, so I will keep it. 

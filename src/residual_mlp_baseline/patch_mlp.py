@@ -1,7 +1,5 @@
 # Patch Residual MLP
 #
-# I want to see whether processing smaller image regions helps the model learn useful patterns more efficiently
-#
 # With 4x4 patches, a 32x32 RGB image becomes 64 patches. A shared Linear
 # layer projects each patch into learned features. Each residual block
 # mixes information between patches, then mixes features within a patch.
@@ -9,7 +7,7 @@
 # Activation, normalization, branch type, head type, and dropout come from
 # the task's settings. Patch size, feature width, and depth are configurable.
 # TASKS supplies the class count: 10 for CIFAR or 1000 for ImageNet32.
-# Tokens are patches; channels inside the blocks are learned features.
+# Tokens are patches, and channels inside the blocks are learned features.
 #
 # Source/Credit: https://arxiv.org/abs/2105.01601
 
@@ -127,7 +125,7 @@ class PatchResidualMLP(nn.Module):
             self.head = nn.Linear(width, num_classes)
         elif head_type == "mlp":
             #The MLP head uses the ordinary activation, as in the flat model
-            # channel_hidden sets the head width; 0.0 disables head dropout
+            #channel_hidden sets the head width; 0.0 disables head dropout
             self.head = make_mlp(width, channel_hidden, num_classes, 0.0, activation)
         else:
             raise ValueError(f"Unknown head type: {head_type}")

@@ -96,7 +96,9 @@ TASK_SETTINGS = {
             "token_hidden": 64,
             "channel_hidden": 256
         },
-        "augmentation": {}
+        "augmentation": {
+            "hflip_prob": 0.5
+        }
     }
 }
 #optional activation function changer 
@@ -126,7 +128,7 @@ def configure_normalization(model, normalization="layer"):
     for block in model.blocks:
         block.norm = nn.BatchNorm1d(width)
 
-    #Replace the normalization before the classification head.
+    #Replace the normalization before the classification head
     model.head_norm = nn.BatchNorm1d(width)
 
     return model
@@ -168,10 +170,10 @@ class Maxout(nn.Module):
         self.pieces = pieces
 
     def forward(self, x):
-        # Preserve batch and patch dimensions while grouping candidates.
+        #Preserve batch and patch dimensions while grouping candidates
         x = x.reshape(*x.shape[:-1], -1, self.pieces)
 
-        # Keep the largest candidate in each group.
+        #Keep the largest candidate in each group
         return x.max(dim=-1).values
 
 #Multiply learned values by learned SiLU gates

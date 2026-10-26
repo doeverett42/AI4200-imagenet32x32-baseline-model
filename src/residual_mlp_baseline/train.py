@@ -65,9 +65,7 @@ def build_model(task):
     )
     if dropout > 0:
         for block in model.blocks:
-            block.activation = nn.Sequential(
-                block.activation, nn.Dropout(dropout)
-            )
+            block.activation = nn.Sequential(block.activation, nn.Dropout(dropout))
     return model
 
 
