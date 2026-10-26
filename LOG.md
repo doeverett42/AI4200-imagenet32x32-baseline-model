@@ -404,3 +404,10 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Why:** Because imagenet is more complex with 1000 categories, more depth of patch blocks could help the model understand patterns with less data as one category may only have one corresponding image; the model needs to learn this quickly.  
 **Expected:** More depth should push validation accuracy down, and if the model generalizes better from this, it should perform better on test accuracy as well. Training time will increase because depth is greater and the model has more parameters to train. 
 **Result:** Validation accuracy 21.99% -> 23.26%. Train loss 3.5687. 17.8 min to train on remote cluster with one gpu. Increasing depth vastly improved test accuracy, and validation accuracy improved slightly; more depth allowed the model to capture more patterns but also drastically increased training time. 
+
+### Change 9 - imagenet32 - 2026-10-26
+
+**Change:** Increased epochs from 10 to 20. 
+**Why:** The training loss is continuing to go down throughout the 10 epochs, so it probably needs more time to learn or more epochs. 
+**Expected:** Because the number of epochs have doubled, the training time is likely to double, but the training loss should continue to decrease and test accuracy should improve. 
+**Result:** Validation accuracy 23.26% -> 24.80%. Train loss 3.2406. 45.3 min to train on remote cluster with one gpu. With more epochs, the model did learn more and improved in both training loss and test accuracy.
