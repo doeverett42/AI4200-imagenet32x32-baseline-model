@@ -61,7 +61,7 @@ TASK_SETTINGS = {
             "image_size": 32,
             "patch_size": 4,
             "width": 128,
-            "depth": 6,
+            "depth": 12,
             "token_hidden": 64,
             "channel_hidden": 256
         },

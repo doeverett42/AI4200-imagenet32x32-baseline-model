@@ -311,8 +311,8 @@ depth, so complexity was not improving it but perhaps causing too much training 
 
 **Change:** Enabled a configurable residual patch MLP with 4x4 patches, 128 features per patch, six blocks, token hidden size 64, and channel hidden size 256. Selected GELU, LayerNorm, ordinary MLP branches, and a linear head. Kept SGD at lr 0.05 with momentum 0.9, 60 epochs, batch size 256, zero weight decay/dropout, no scheduler, and the current flipping, translation, rotation, and noise settings.
 **Why:** I want to test whether processing image patches with shared weights helps the model learn useful local patterns. Separate token and channel branches let it combine information between regions and within each region. Keeping the options configurable lets me test them individually.
-**Expected:** Possibly better validation accuracy and learning efficiency. Training time must be measured because fewer parameters do not necessarily mean faster epochs. 
-**Result:** 
+**Expected:** Possibly better validation accuracy and learning efficiency given more ways of processing patterns. Training time must be measured because fewer parameters do not necessarily mean faster epochs. 
+**Result:** Test accuracy (best prev model) 63.12% -> 71.71%. Training loss 0.3877. 3.3 min to run on my local machine with one gpu. The residual patch mlp demonstrated significant improvement in both test accuracy and training loss, showing that processing immages sequentially and mixing their features across patches and channels allows the neurons to discover more local and general patterns to an image. 
 
 ### Change 0 — imagenet32 — 2026-10-16
 
