@@ -98,7 +98,8 @@ TASK_SETTINGS = {
         },
         "augmentation": {
             "hflip_prob": 0.5, 
-            "translate": 2,
+            "translate": 0,
+            "noise_std": 0.02,
             "padding_mode": "reflection"
         }
     }
