@@ -59,7 +59,7 @@ TASK_SETTINGS = {
         # Patch dimensions; the top-level dimensions belong to the flat model
         "patch_model": {
             "image_size": 32,
-            "patch_size": 4,
+            "patch_size": 1,
             "width": 128,
             "depth": 6,
             "token_hidden": 64,

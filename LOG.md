@@ -335,16 +335,16 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Expected:** Training loss will likey increase because it loses some of the inputs it was training on, but test accuracy should increase if the model generalizes better. 
 **Result:** Test accuracy 71.71% -> 72.76%. Training loss 0.5332. 3.6 min to run on my local machine with one gpu. The model performed slightly worse on training loss but improved in test accuracy, showing that patch improves and generalizes better with dropout. 
 
+### Change 18 - cifar10 - 2026-10-26
+
+**Change:** Removed noise_std and rotation in data augmentation. 
+**Why:** Because the images are already scaled down to 32x32, adding noise or rotation could obscure the target category too much to be useful.  
+**Expected:** Training loss will decrease because training images are easier to process, and test accuracy could increase if the model gathers more useful patterns from the noise-free images. 
+**Result:** Test accuracy 72.76% -> 75.45%. Training loss 0.4226. 3.4 min to run on my local machine with one gpu. The model performed better on both training loss and test accuracy because the random noise and added rotation augmentation did not provide useful generalizations. 
+
 ### Change 0 — imagenet32 — 2026-10-16
 
 **Change:** Baseline
 **Why:** NA
 **Expected:** Baseline results 
 **Result:** Test Accuracy: 6.77% 37.2 min to train on my local machine with 1 GPU. 
-
-### Change 1 — cifar10 — 2026-10-
-
-**Change:** 
-**Why:** 
-**Expected:** 
-**Result:** 
