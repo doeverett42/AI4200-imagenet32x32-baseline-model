@@ -85,14 +85,14 @@ TASK_SETTINGS = {
         "lr": 0.05,
         "momentum": 0.9,
         "weight_decay": 0.0,
-        "dropout": 0.1,
+        "dropout": 0,
         "scheduler": "none",
         # Patch dimensions; the top-level dimensions belong to the flat model
         "patch_model": {
             "image_size": 32,
             "patch_size": 4,
             "width": 128,
-            "depth": 6,
+            "depth": 12,
             "token_hidden": 64,
             "channel_hidden": 256
         },
