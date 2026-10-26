@@ -369,3 +369,11 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Why:** Tanh flattens for large inputs, which can weaken the signal used to update weights. GELU does not cap large positive outputs, and it's recommended by the mlp-mixer paper, so I want to include it. 
 **Expected:** Possibly faster reduction in training loss and higher accuracy within the same 10 epochs.
 **Result:** Test accuracy 17.29% -> 21.42%. Training loss 3.7395. 10.4 min on the remote HPC cluster. GELU improved both training loss and test accuracy, so I will keep it. 
+
+### Change 4 - imagenet32 - 2026-10-26
+
+**Change:** Added random horizontal flipping with a probability of 0.5 during training. 
+**Why:** ImageNet objects can appear facing different directions. Mirroring training images may help the model recognize the same category in either orientation.
+**Expected:** Possibly higher accuracy from seeing more image variations. Training loss could increase because the varied examples are harder to learn, and augmentation will likely add processing time.
+**Result:** Test accuracy 21.42% -> 21.71%. training loss 3.7244. 14.9 min to train on remote HPC cluster. Flipping produced a small accuracy improvement in this run, but the longer training time makes this seem not as necessary; I will keep for the time being. 
+

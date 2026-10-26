@@ -97,7 +97,9 @@ TASK_SETTINGS = {
             "channel_hidden": 256
         },
         "augmentation": {
-            "hflip_prob": 0.5
+            "hflip_prob": 0.5, 
+            "translate": 2,
+            "padding_mode": "reflection"
         }
     }
 }
