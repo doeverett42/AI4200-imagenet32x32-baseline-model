@@ -391,9 +391,16 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Expected:** Possibly higher accuracy if variation helps the model generalize better, but more data variation will cause overhead and training time to increase along with training loss. 
 **Result:** Test accuracy 21.71% -> 21.99%. Training loss 3.7329. 10.5 min to train on the remote HPC cluster. Adding random noise improved both training loss and test accuracy, showing that perturbing the image allowed the model to generalize better. 
 
-### Change 7 - mnist - 2026-10-21
+### Change 7 - imagenet32 - 2026-10-26
 
 **Change:** Changed optimizer to AdamW with learning rate 0.001. 
 **Why:** Adaptive per-parameter updates may make better progress within the same training budget if SGD is the limiting factor.
 **Expected:** Different convergence and possibly higher validation accuracy, but not a guaranteed improvement.
-**Result:** Validation accuracy % -> %. Train loss .  min to train on remote cluster with one gpu. 
+**Result:** Validation accuracy 21.99% -> 20.84%. Train loss 3.8142. 10.6 min to train on remote cluster with one gpu. AdamW proved worse than SGD, which could just be that it randomly for this seed did not fall to a lower minimum. I will not keep it for now.
+
+### Change 8 - imagenet32 - 2026-10-26
+
+**Change:** Increased patch depth from 6 to 12. 
+**Why:** Because imagenet is more complex with 1000 categories, more depth of patch blocks could help the model understand patterns with less data as one category may only have one corresponding image; the model needs to learn this quickly.  
+**Expected:** More depth should push validation accuracy down, and if the model generalizes better from this, it should perform better on test accuracy as well. Training time will increase because depth is greater and the model has more parameters to train. 
+**Result:** Validation accuracy 21.99% -> 23.26%. Train loss 3.5687. 17.8 min to train on remote cluster with one gpu. Increasing depth vastly improved test accuracy, and validation accuracy improved slightly; more depth allowed the model to capture more patterns but also drastically increased training time. 

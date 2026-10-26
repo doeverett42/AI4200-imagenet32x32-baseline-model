@@ -76,7 +76,7 @@ TASK_SETTINGS = {
 
     "imagenet32": {
         "batch_size": 256,
-        "epochs": 10,
+        "epochs": 20,
         "width": 128,
         "hidden": 256,
         "depth": 15,
