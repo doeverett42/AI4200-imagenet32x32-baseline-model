@@ -41,7 +41,7 @@ TASK_SETTINGS = {
 
     "cifar10": {
         "batch_size": 256,
-        "epochs": 1,
+        "epochs": 60,
         "width": 512,
         "hidden": 1024,
         "depth": 30,
@@ -59,7 +59,7 @@ TASK_SETTINGS = {
         # Patch dimensions; the top-level dimensions belong to the flat model
         "patch_model": {
             "image_size": 32,
-            "patch_size": 1,
+            "patch_size": 2,
             "width": 128,
             "depth": 6,
             "token_hidden": 64,
