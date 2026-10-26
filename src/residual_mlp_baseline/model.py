@@ -81,11 +81,11 @@ TASK_SETTINGS = {
         "hidden": 256,
         "depth": 15,
         "activation": "gelu",
-        "optimizer": "adamw",
-        "lr": 0.001,
+        "optimizer": "sgd",
+        "lr": 0.05,
         "momentum": 0.9,
         "weight_decay": 0.0,
-        "dropout": 0,
+        "dropout": 0.1,
         "scheduler": "none",
         # Patch dimensions; the top-level dimensions belong to the flat model
         "patch_model": {
