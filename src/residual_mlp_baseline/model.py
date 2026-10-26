@@ -3,8 +3,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-# Each task differs only in its input size and its number of classes.
-# The same model class is used for all three.
+# Each task supplies its input size and number of classes.
+# train.py selects the architecture using the task settings.
 TASKS = {
     "mnist":      {"in_features": 28 * 28,     "num_classes": 10},    # 28x28 grayscale
     "cifar10":    {"in_features": 3 * 32 * 32, "num_classes": 10},    # 32x32 color
@@ -45,7 +45,7 @@ TASK_SETTINGS = {
         "width": 512,
         "hidden": 1024,
         "depth": 30,
-        "activation": "tanh",
+        "activation": "gelu",
         "optimizer": "sgd",
         "lr": 0.05,
         "momentum": 0.9,
@@ -54,8 +54,17 @@ TASK_SETTINGS = {
         "scheduler": "none",
         "normalization": "layer",
         "head_type": "linear",
-        "block_type": "maxout",
+        "block_type": "mlp",
         "maxout_pieces": 2,
+        # Patch dimensions; the top-level dimensions belong to the flat model
+        "patch_model": {
+            "image_size": 32,
+            "patch_size": 4,
+            "width": 128,
+            "depth": 6,
+            "token_hidden": 64,
+            "channel_hidden": 256
+        },
         "augmentation": {
             "hflip_prob": 0.5,
             "translate": 2, 
@@ -150,9 +159,8 @@ class Maxout(nn.Module):
         self.pieces = pieces
 
     def forward(self, x):
-        #Group the candidates belonging to each hidden feature.
-        #(batch, hidden * pieces) -> (batch, hidden, pieces)
-        x = x.reshape(x.shape[0], -1, self.pieces)
+        # Preserve batch and patch dimensions while grouping candidates.
+        x = x.reshape(*x.shape[:-1], -1, self.pieces)
 
         # Keep the largest candidate in each group.
         return x.max(dim=-1).values
@@ -266,7 +274,7 @@ class ResidualMLP(nn.Module):
         return x
 
     def predict(self, x):
-        """Inference pass, never used during training. Returns class probabilities."""
+        # Inference pass, never used during training. Returns class probabilities.
         self.eval()                           # switch layers to inference behavior
         with torch.no_grad():                 # no gradients needed at inference
             return torch.softmax(self.forward(x), dim=1)

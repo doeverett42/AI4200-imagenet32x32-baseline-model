@@ -302,11 +302,17 @@ depth, so complexity was not improving it but perhaps causing too much training 
 
 ### Change 14 - cifar10 - 2026-10-25
 
-**Change:** Tested the 15-block CIFAR model with random rotation between -7 and +7 degrees and Gaussian noise with noise_std = 0.01. 
+**Change:** Tested the 30-block model with random rotation between -7 and +7 degrees and Gaussian noise with noise_std = 0.01. 
 **Why:** I wanted to see whether rotation and mild pixel noise for a largere augmentation treatment could help the deeper model recognize more variations of the same objects and generalize better. 
 **Expected:** Possibly higher test accuracy from the additional image variations. Training loss may remain higher because the augmented examples are harder to fit within the same 60 epochs.
-**Result:** Test accuracy 63.31% -> 61.87%. Final training loss 0.6046. 2.8 min. Accuracy decreased by 1.44 percentage points despite slightly lower training loss. This combination did not improve accuracy. Because rotation and noise strength changed together, I cannot determine their individual effects from this run.
+**Result:** Test accuracy 63.07% -> 62.40%. Final training loss 0.7045. 4.3 min to train on my local machine with one gpu. Accuracy decreased and training loss increased. This combination did not improve accuracy. It seems like my current architecture is hitting a limit of about 63% accuracy.
 
+### Change 15 - cifar10 - 2026-10-25
+
+**Change:** Enabled a configurable residual patch MLP with 4x4 patches, 128 features per patch, six blocks, token hidden size 64, and channel hidden size 256. Selected GELU, LayerNorm, ordinary MLP branches, and a linear head. Kept SGD at lr 0.05 with momentum 0.9, 60 epochs, batch size 256, zero weight decay/dropout, no scheduler, and the current flipping, translation, rotation, and noise settings.
+**Why:** I want to test whether processing image patches with shared weights helps the model learn useful local patterns. Separate token and channel branches let it combine information between regions and within each region. Keeping the options configurable lets me test them individually.
+**Expected:** Possibly better validation accuracy and learning efficiency. Training time must be measured because fewer parameters do not necessarily mean faster epochs. 
+**Result:** 
 
 ### Change 0 — imagenet32 — 2026-10-16
 

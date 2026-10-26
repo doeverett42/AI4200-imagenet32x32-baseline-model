@@ -4,6 +4,7 @@ from torch.utils.data import DataLoader, TensorDataset
 
 from .model import TASKS, TASK_SETTINGS, ResidualMLP, configure_normalization, configure_head, configure_blocks
 from .augmentation import augment_batch
+from .patch_mlp import PatchResidualMLP
 
 
 # Baseline settings. Deliberately plain so they are easy to beat:
@@ -14,7 +15,7 @@ EPOCHS = {"mnist": 10, "cifar10": 30, "imagenet32": 10}
 
 
 def prepare(X):
-    """Convert uint8 images (0-255) to floats in roughly [-1, 1]."""
+    # Convert uint8 images (0-255) to floats in roughly [-1, 1].
     return (torch.as_tensor(X).float() / 255.0 - 0.5) / 0.5
 
 
@@ -28,35 +29,58 @@ def prepare(X):
 # Change anything inside them, but keep their names and arguments.
 # ---------------------------------------------------------------------------
 
+# Build a fresh model using the task's architecture settings.
+def build_model(task):
+    settings = TASK_SETTINGS[task]
+    dropout = settings.get("dropout", 0.0)
+    if not 0 <= dropout <= 1:
+        raise ValueError("dropout must be between 0 and 1")
+
+    patch_settings = settings.get("patch_model")
+    if patch_settings is not None:
+        return PatchResidualMLP(
+            **TASKS[task],
+            **patch_settings,
+            activation=settings["activation"],
+            normalization=settings.get("normalization", "layer"),
+            block_type=settings.get("block_type", "mlp"),
+            maxout_pieces=settings.get("maxout_pieces", 2),
+            head_type=settings.get("head_type", "linear"),
+            dropout=dropout
+        )
+
+    # Preserve the existing flat-model setup.
+    model = ResidualMLP(
+        **TASKS[task], width=settings["width"],
+        hidden=settings["hidden"], depth=settings["depth"],
+        activation=settings["activation"]
+    )
+    model = configure_normalization(
+        model, settings.get("normalization", "layer")
+    )
+    model = configure_head(model, settings.get("head_type", "mlp"))
+    model = configure_blocks(
+        model, block_type=settings.get("block_type", "mlp"),
+        maxout_pieces=settings.get("maxout_pieces", 2)
+    )
+    if dropout > 0:
+        for block in model.blocks:
+            block.activation = nn.Sequential(
+                block.activation, nn.Dropout(dropout)
+            )
+    return model
+
+
 def train(task, X_train, y_train, seed=0, device="cuda"):
-    """Build a new model and train it from scratch. Returns the trained model."""
+    # Build a new model and train it from scratch. Returns the trained model
     torch.manual_seed(seed)                   # makes the run reproducible
 
     #Get passed in settings 
     settings = TASK_SETTINGS[task]
 
-    # 1. Build the model for this task. Only input size and class count differ.
-    model = ResidualMLP(**TASKS[task], width=settings["width"], hidden=settings["hidden"], depth=settings["depth"], activation=settings["activation"]).to(device)
-    
-    #Configure fresh layers before moving everything to the device
-    model = configure_normalization(model, settings.get("normalization", "layer"))
-    model = configure_head(model, settings.get("head_type", "mlp"))
-    model = configure_blocks(model, block_type=settings.get("block_type", "mlp"), maxout_pieces=settings.get("maxout_pieces", 2))
-    model = model.to(device)
+    # Build the selected architecture before creating the optimizer.
+    model = build_model(task).to(device)
 
-    #Read the dropout rate selected for this task
-    #If the setting is missing, leave dropout disabled
-    dropout_p = settings.get("dropout", 0.0)
-
-    if not 0 <= dropout_p <= 1:
-        raise ValueError("dropout must be between 0 and 1")
-
-    #Apply dropout after each residual branch's hidden activation
-    #A rate of zero leaves the original activation unchanged
-    if dropout_p > 0:
-        for block in model.blocks:
-            block.activation = nn.Sequential(block.activation, nn.Dropout(p=dropout_p))
-    
     # 2. Wrap the data so we can loop over shuffled mini-batches.
     dataset = TensorDataset(prepare(X_train), torch.as_tensor(y_train).long())
     loader = DataLoader(dataset, batch_size=settings["batch_size"], shuffle=True)
@@ -109,7 +133,7 @@ def train(task, X_train, y_train, seed=0, device="cuda"):
 
 
 def predict(model, X):
-    """Return class probabilities for X, one row per example, on the CPU."""
+    # Return class probabilities for X, one row per example, on the CPU.
     device = next(model.parameters()).device
     X = prepare(X)
     # Predict in chunks so a large test set does not run out of GPU memory.
