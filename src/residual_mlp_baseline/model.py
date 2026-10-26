@@ -54,7 +54,7 @@ TASK_SETTINGS = {
         "scheduler": "none",
         "normalization": "layer",
         "head_type": "linear",
-        "block_type": "maxout",
+        "block_type": "mlp",
         "maxout_pieces": 2,
         # Patch dimensions; the top-level dimensions belong to the flat model
         "patch_model": {
