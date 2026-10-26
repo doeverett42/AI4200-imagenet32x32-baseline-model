@@ -314,6 +314,20 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Expected:** Possibly better validation accuracy and learning efficiency given more ways of processing patterns. Training time must be measured because fewer parameters do not necessarily mean faster epochs. 
 **Result:** Test accuracy (best prev model) 63.12% -> 71.71%. Training loss 0.3877. 3.3 min to run on my local machine with one gpu. The residual patch mlp demonstrated significant improvement in both test accuracy and training loss, showing that processing immages sequentially and mixing their features across patches and channels allows the neurons to discover more local and general patterns to an image. 
 
+### Change 16 - cifar10 - 2026-10-25
+
+**Change:** Increased patch blocks from 6 to 12.  
+**Why:** More patch blocks could allow the model to transform and discover more complex features. 
+**Expected:** The training loss should decrease given more parameters allow the model to learn the dataset; test accuracy could increase from this or decrease if the model begins to specialize. 
+**Result:** Test accuracy 71.71% -> 70.06%. Training loss 0.2529. 6.0 min to run on my local machine with one gpu. The residual patch mlp demonstrated significant improvement in training loss, but it did worse in test accuracy, meaning it began to overfit and specialize on the testing data.
+
+### Change 16 - cifar10 - 2026-10-25
+
+**Change:** Increased patch blocks from 12 to 10.  
+**Why:** Lese patch blocks to hopefully find a sweet spot of lowering training loss and helping the model generalize useful features. 
+**Expected:** The training loss will increase given less parameters, but the test accuracy could increase if this depth is before the model begins to specialize. 
+**Result:** Test accuracy 70.06% -> 70.88%. Training loss 0.2726. 5.0 min to run on my local machine with one gpu. The model performed slightly worse on training loss and still seemed to over specialize on the training data from test accuracy. 
+
 ### Change 0 — imagenet32 — 2026-10-16
 
 **Change:** Baseline

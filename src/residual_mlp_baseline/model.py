@@ -49,7 +49,7 @@ TASK_SETTINGS = {
         "optimizer": "sgd",
         "lr": 0.05,
         "momentum": 0.9,
-        "weight_decay": 0.0,
+        "weight_decay": 0.01,
         "dropout": 0, 
         "scheduler": "none",
         "normalization": "layer",
