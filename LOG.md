@@ -354,4 +354,12 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Change:** Replaced the flat residual MLP with a residual patch MLP using 4×4 patches, 128 features per patch, six mixing blocks, token hidden size 64, and channel hidden size 256. The model uses tanh, LayerNorm, ordinary MLP branches, and a linear classifier with 1,000 outputs. Kept 10 epochs, batch size 256, SGD learning rate 0.05, zero momentum, no weight decay or dropout, no scheduler, and no augmentation.
 **Why:** Patch mixing produced my strongest CIFAR results, so I want to test whether the same way of processing images helps ImageNet32. Shared patch processing may help the model learn useful local patterns, while token and channel mixing combine information across image regions and learned features.
 **Expected:** Possibly higher accuracy than the original model's 6.77%. ImageNet has more classes and more varied images, so the CIFAR improvement may not transfer directly. 
-**Result:** 
+**Result:** Test accuracy 6.77% -> 13.54%. Training loss 4.5708. Training took 12.0 min on remote hpc cluster. The patch model achieved twice the baseline accuracy, suggesting that shared patch processing and mixing learned more useful image features under these settings. Training loss was still decreasing at the end, so I will test momentum next to see whether the model can learn more within the same 10 epochs.
+
+### Change 2 - imagenet32 - 2026-10-26
+
+**Change:** Increased SGD momentum from 0.0 to 0.9. 
+**Why:** Training loss was still decreasing after 10 epochs. Momentum carries information from previous updates, which may help the model make faster progress without increasing the number of epochs.
+**Expected:** Faster reduction in training loss and possibly higher accuracy within the same 10 epochs, with similar training time.
+**Result:** Test accuracy 13.54% -> 17.29%. Final training loss 4.1471. Training took 12.2 min on remote hpc cluster. With momentum, the model reached a lower training loss after five epochs than the previous model reached after ten. Momentum improved both training progress and test accuracy.
+

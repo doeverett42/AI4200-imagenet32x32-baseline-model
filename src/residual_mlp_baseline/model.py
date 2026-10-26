@@ -80,7 +80,7 @@ TASK_SETTINGS = {
         "width": 128,
         "hidden": 256,
         "depth": 15,
-        "activation": "tanh",
+        "activation": "gelu",
         "optimizer": "sgd",
         "lr": 0.05,
         "momentum": 0.9,
