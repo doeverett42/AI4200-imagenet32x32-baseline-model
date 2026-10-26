@@ -375,18 +375,25 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Change:** Added random horizontal flipping with a probability of 0.5 during training. 
 **Why:** ImageNet objects can appear facing different directions. Mirroring training images may help the model recognize the same category in either orientation.
 **Expected:** Possibly higher accuracy from seeing more image variations. Training loss could increase because the varied examples are harder to learn, and augmentation will likely add processing time.
-**Result:** Test accuracy 21.42% -> 21.71%. training loss 3.7244. 14.9 min to train on remote HPC cluster. Flipping produced a small accuracy improvement in this run, but the longer training time makes this seem not as necessary; I will keep for the time being. 
+**Result:** Test accuracy 21.42% -> 21.71%. Training loss 3.7244. 14.9 min to train on remote HPC cluster. Flipping produced a small accuracy improvement in this run, but the longer training time makes this seem not as necessary; I will keep for the time being. 
 
 ### Change 5 - imagenet32 - 2026-10-26
 
 **Change:** Added random horizontal and vertical shifts of up to two pixels with reflection padding.
 **Why:** Small shifts may help the model recognize objects in different positions. They also change where image features fall relative to the 4x4 patch boundaries, which may help the model rely less on exact positioning.
 **Expected:** Possibly higher accuracy from learning these positional variations. Training loss may increase because the shifted images are harder to learn. Translation also adds more data variation to process, likely increasing training time. 
-**Result:** Test accuracy 21.71% -> 21.58%. Training loss increased from 3.8242. 11.0 min to train on the remote HPC cluster. Adding translation did not improve accuracy within 10 epochs, so I will remove it and return to flipping alone.
+**Result:** Test accuracy 21.71% -> 21.58%. Training loss 3.8242. 11.0 min to train on the remote HPC cluster. Adding translation did not improve accuracy within 10 epochs, so I will remove it and return to flipping alone.
 
 ### Change 6 - imagenet32 - 2026-10-26
 
 **Change:** Added 0.02 noise_std to slightly obscure images. 
 **Why:** Small variation in pixel values might help the model gather information from blurred instances. 
 **Expected:** Possibly higher accuracy if variation helps the model generalize better, but more data variation will cause overhead and training time to increase along with training loss. 
-**Result:** 
+**Result:** Test accuracy 21.71% -> 21.99%. Training loss 3.7329. 10.5 min to train on the remote HPC cluster. Adding random noise improved both training loss and test accuracy, showing that perturbing the image allowed the model to generalize better. 
+
+### Change 7 - mnist - 2026-10-21
+
+**Change:** Changed optimizer to AdamW with learning rate 0.001. 
+**Why:** Adaptive per-parameter updates may make better progress within the same training budget if SGD is the limiting factor.
+**Expected:** Different convergence and possibly higher validation accuracy, but not a guaranteed improvement.
+**Result:** Validation accuracy % -> %. Train loss .  min to train on remote cluster with one gpu. 
