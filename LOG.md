@@ -348,3 +348,10 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Why:** NA
 **Expected:** Baseline results 
 **Result:** Test Accuracy: 6.77% 37.2 min to train on my local machine with 1 GPU. 
+
+### Change 1 - imagenet32 - 2026-10-26
+
+**Change:** Replaced the flat residual MLP with a residual patch MLP using 4×4 patches, 128 features per patch, six mixing blocks, token hidden size 64, and channel hidden size 256. The model uses tanh, LayerNorm, ordinary MLP branches, and a linear classifier with 1,000 outputs. Kept 10 epochs, batch size 256, SGD learning rate 0.05, zero momentum, no weight decay or dropout, no scheduler, and no augmentation.
+**Why:** Patch mixing produced my strongest CIFAR results, so I want to test whether the same way of processing images helps ImageNet32. Shared patch processing may help the model learn useful local patterns, while token and channel mixing combine information across image regions and learned features.
+**Expected:** Possibly higher accuracy than the original model's 6.77%. ImageNet has more classes and more varied images, so the CIFAR improvement may not transfer directly. 
+**Result:** 
