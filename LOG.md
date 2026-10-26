@@ -323,10 +323,17 @@ depth, so complexity was not improving it but perhaps causing too much training 
 
 ### Change 16 - cifar10 - 2026-10-25
 
-**Change:** Increased patch blocks from 12 to 10.  
+**Change:** Decreased patch blocks from 12 to 10.  
 **Why:** Lese patch blocks to hopefully find a sweet spot of lowering training loss and helping the model generalize useful features. 
 **Expected:** The training loss will increase given less parameters, but the test accuracy could increase if this depth is before the model begins to specialize. 
-**Result:** Test accuracy 70.06% -> 70.88%. Training loss 0.2726. 5.0 min to run on my local machine with one gpu. The model performed slightly worse on training loss and still seemed to over specialize on the training data from test accuracy. 
+**Result:** Test accuracy 70.06% -> 70.88%. Training loss 0.2726. 5.0 min to run on my local machine with one gpu. The model performed slightly worse on training loss and still seemed to over specialize on the training data from test accuracy. I will revert to 6. 
+
+### Change 17 - cifar10 - 2026-10-25
+
+**Change:** Added dropout to the patch mlp with 6 blocks. 
+**Why:** The model has shown signs of overfitting, so adding dropout could help the model rely less on certain features and generalize more. 
+**Expected:** Training loss will likey increase because it loses some of the inputs it was training on, but test accuracy should increase if the model generalizes better. 
+**Result:** Test accuracy 71.71% -> 72.76%. Training loss 0.5332. 3.6 min to run on my local machine with one gpu. The model performed slightly worse on training loss but improved in test accuracy, showing that patch improves and generalizes better with dropout. 
 
 ### Change 0 — imagenet32 — 2026-10-16
 
