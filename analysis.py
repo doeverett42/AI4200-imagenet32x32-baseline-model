@@ -1,6 +1,4 @@
-# ImageNet training dynamics and residual branch ablation.
-# Run this separate file on the HPC after the harness has cached the data.
-# The graded train() function is not imported or modified.
+#ImageNet training dynamics and residual branch ablation
 
 import copy
 import csv
@@ -15,7 +13,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, Dataset
 
-# Use the source files beside this script instead of an older installed package.
+#Use the source files beside this script instead of an older installed package
 import sys
 
 ROOT = Path(__file__).resolve().parent
@@ -25,7 +23,7 @@ from residual_mlp_baseline.train import build_model, prepare
 from residual_mlp_baseline.augmentation import augment_batch
 
 
-# All settings are fixed here; no command-line arguments are needed.
+#Settings
 TASK = "imagenet32"
 SEED = 0
 VALIDATION_PER_CLASS = 5
@@ -52,13 +50,13 @@ def rms(tensor):
 
 
 def variance(tensor):
-    # Population variance over every batch, patch, and feature entry.
+    #Population variance over every batch, patch, and feature entry
     return tensor.detach().float().var(unbiased=False).item()
 
 
 @contextmanager
 def evaluation_mode(model):
-    # Restore every module's previous mode, including any mixed train/eval modes.
+    #Restore every module's previous mode, including any mixed train/eval modes
     states = [(module, module.training) for module in model.modules()]
     model.eval()
     try:
@@ -74,7 +72,7 @@ def rng_devices(device):
 
 
 class CachedImages(Dataset):
-    # Keep the full image array on disk and copy only one selected uint8 image.
+    #Keep the full image array on disk and copy only one selected uint8 image
     def __init__(self, images, labels, indices):
         self.images = images
         self.labels = labels
@@ -90,7 +88,7 @@ class CachedImages(Dataset):
 
 
 def split_indices(labels, per_class=VALIDATION_PER_CLASS, seed=SEED):
-    # Only the training split is divided; official test files are never opened.
+    #Only the training split is divided; official test files are never opened
     generator = np.random.default_rng(seed)
     validation = []
     for label in np.unique(labels):
@@ -124,7 +122,7 @@ def make_scheduler(optimizer, settings):
 
 
 def residual_branches(model):
-    # Patch blocks have two separate additions; flat blocks have one addition.
+    #Patch blocks have two separate additions; flat blocks have one addition
     branches = []
     for depth, block in enumerate(model.blocks, start=1):
         if hasattr(block, "token_branch"):
@@ -149,7 +147,7 @@ class TrainingDynamics:
 
     def measure(self, model, optimizer, epoch):
         device = self.fixed_X.device
-        # Copy the pair together so momentum buffers still refer to copied weights.
+        #Copy the pair together so momentum buffers still refer to copied weights
         with torch.random.fork_rng(devices=rng_devices(device)):
             probe, probe_optimizer = copy.deepcopy((model, optimizer))
             probe.eval()
@@ -231,7 +229,7 @@ class TrainingDynamics:
 
 def evaluate(model, loader, device):
     loss_sum, count, correct_parts = 0.0, 0, []
-    # Validation must not change training modes, running statistics, or RNG state.
+    #Validation must not change training modes, running statistics, or RNG state
     with torch.random.fork_rng(devices=rng_devices(device)), evaluation_mode(model), torch.no_grad():
         for images, labels in loader:
             images, labels = prepare(images.to(device)), labels.to(device)
@@ -246,14 +244,14 @@ def evaluate(model, loader, device):
 def ablate_branches(model, loader, device, output_dir):
     baseline, baseline_loss, baseline_correct = evaluate(model, loader, device)
     print(f"Full model validation accuracy: {baseline:.2%}", flush=True)
-    # Include whole-block removals as an additional one-point-per-block view.
+    #Include whole-block removals as an additional one-point-per-block view
     targets = residual_branches(model)
     if targets and targets[0][-1]:
         targets += [(depth, "whole_block", f"blocks.{depth - 1}", block, False) for depth, block in enumerate(model.blocks, start=1)]
     rows = []
     for depth, kind, name, module, returns_delta in targets:
         def skip_branch(selected, inputs, output):
-            # A MixingBranch returns only its correction, so zero that correction.
+            #A MixingBranch returns only its correction, so zero that correction
             return torch.zeros_like(output) if returns_delta else inputs[0]
         handle = module.register_forward_hook(skip_branch)
         try:
@@ -360,7 +358,7 @@ def write_summary(output_dir, dynamics, ablations, metadata):
 
 
 def main():
-    # Fail before training if plotting dependencies or the existing cache are missing.
+    #Fail before training if plotting dependencies or the existing cache are missing
     import matplotlib
     settings = copy.deepcopy(TASK_SETTINGS[TASK])
     for filename in ("X_train.npy", "y_train.npy"):
