@@ -61,9 +61,9 @@ TASK_SETTINGS = {
             "image_size": 32,
             "patch_size": 4,
             "width": 128,
-            "depth": 6,
+            "depth": 8,
             "token_hidden": 64,
-            "channel_hidden": 512
+            "channel_hidden": 256
         },
         "augmentation": {
             "hflip_prob": 0.5,
