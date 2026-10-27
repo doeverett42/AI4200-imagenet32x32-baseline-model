@@ -45,7 +45,7 @@ TASK_SETTINGS = {
         "width": 512,
         "hidden": 1024,
         "depth": 30,
-        "activation": "silu",
+        "activation": "gelu",
         "optimizer": "sgd",
         "lr": 0.05,
         "momentum": 0.9,
@@ -54,7 +54,7 @@ TASK_SETTINGS = {
         "scheduler": "cosine",
         "normalization": "layer",
         "head_type": "linear",
-        "block_type": "mlp",
+        "block_type": "maxout",
         "maxout_pieces": 2,
         # Patch dimensions; the top-level dimensions belong to the flat model
         "patch_model": {
