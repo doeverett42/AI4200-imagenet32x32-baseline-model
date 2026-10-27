@@ -41,7 +41,7 @@ TASK_SETTINGS = {
 
     "cifar10": {
         "batch_size": 256,
-        "epochs": 60,
+        "epochs": 80,
         "width": 512,
         "hidden": 1024,
         "depth": 30,
@@ -54,7 +54,7 @@ TASK_SETTINGS = {
         "scheduler": "cosine",
         "normalization": "layer",
         "head_type": "linear",
-        "block_type": "maxout",
+        "block_type": "swiglu",
         "maxout_pieces": 2,
         # Patch dimensions; the top-level dimensions belong to the flat model
         "patch_model": {
