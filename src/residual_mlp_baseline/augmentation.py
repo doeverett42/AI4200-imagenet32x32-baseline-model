@@ -1,6 +1,25 @@
 import torch
 import torch.nn.functional as F
 
+#Slightly change each image's color balance with one gain per RGB channel
+def random_rgb_jitter(images, strength):
+    if not 0 <= strength <= 1:
+        raise ValueError("rgb_jitter must be between 0 and 1")
+    if strength == 0:
+        return images
+    if images.ndim != 4 or images.shape[1] != 3:
+        raise ValueError("rgb_jitter requires images shaped (batch, 3, height, width)")
+    if not images.is_floating_point():
+        raise ValueError("rgb_jitter expects prepared floating-point images")
+
+    #Return to [0, 1] so multiplying changes channel intensity around black
+    rgb = (images + 1) / 2
+    #Each image gets separate R, G, and B gains, shared across all its pixels
+    gains = images.new_empty((images.shape[0], 3, 1, 1)).uniform_(1 - strength, 1 + strength)
+    #Keep valid pixel values, then restore prepare()'s [-1, 1] range
+    return (rgb * gains).clamp(0, 1) * 2 - 1
+
+
 #Rotate and shift each image independently
 def random_affine(images, rotation=0, translate=0, padding_mode="zeros"):
     """
@@ -109,11 +128,12 @@ def augment_batch(images, config=None):
     Expected images:
         Prepared floating-point tensors in approximately [-1, 1], shaped (batch_size, channels, height, width)
 
-    Example configuration:
+    Example RGB configuration:
         {
             "rotation": 7,
             "translate": 2,
             "hflip_prob": 0.0,
+            "rgb_jitter": 0.05,
             "noise_std": 0.02,
             "padding_mode": "zeros"
         }
@@ -121,7 +141,8 @@ def augment_batch(images, config=None):
     Operations run in this order:
         1. Horizontal flipping
         2. Rotation and movement
-        3. Gaussian pixel noise
+        3. RGB channel scaling, if enabled on three-channel images
+        4. Gaussian pixel noise
 
     This function changes images, not labels, and does not modify the original input tensor in place
     """
@@ -134,6 +155,7 @@ def augment_batch(images, config=None):
     translate = config.get("translate", 0)
     flip_prob = config.get("hflip_prob", 0.0)
     noise_std = config.get("noise_std", 0.0)
+    rgb_jitter = config.get("rgb_jitter", 0.0)
     padding_mode = config.get("padding_mode", "zeros")
 
     if rotation < 0 or translate < 0 or noise_std < 0:
@@ -141,6 +163,8 @@ def augment_batch(images, config=None):
 
     if not 0 <= flip_prob <= 1:
         raise ValueError("hflip_prob must be between 0 and 1")
+    if not 0 <= rgb_jitter <= 1:
+        raise ValueError("rgb_jitter must be between 0 and 1")
 
     # ---------------------------------------------------------------
     # 1. Horizontal flipping
@@ -159,10 +183,17 @@ def augment_batch(images, config=None):
         images = random_affine(images, rotation, translate, padding_mode)
 
     # ---------------------------------------------------------------
-    # 3. Gaussian noise
+    # 3. RGB channel scaling
+    # ---------------------------------------------------------------
+    #A strength of 0.05 gives each channel a gain between 0.95 and 1.05
+    if rgb_jitter > 0:
+        images = random_rgb_jitter(images, rgb_jitter)
+
+    # ---------------------------------------------------------------
+    # 4. Gaussian noise
     # ---------------------------------------------------------------
     #
-    #Small random brightness changes may discourage dependence onexact pixel values
+    #Independent pixel noise may discourage dependence on exact pixel values
     if noise_std > 0:
         images = (images + torch.randn_like(images) * noise_std).clamp(-1, 1)
 

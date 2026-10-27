@@ -70,6 +70,7 @@ TASK_SETTINGS = {
             "translate": 2, 
             "rotation": 0,
             "noise_std": 0.0,
+            "rgb_jitter": 0.05,  #Small independent changes to R, G, and B intensity
             "padding_mode": "reflection"  # Fill exposed edges with reflected pixels    
         }
     },
