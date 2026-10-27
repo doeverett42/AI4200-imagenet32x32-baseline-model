@@ -51,7 +51,7 @@ TASK_SETTINGS = {
         "momentum": 0.9,
         "weight_decay": 0.0,
         "dropout": 0.1, 
-        "scheduler": "none",
+        "scheduler": "cosine",
         "normalization": "layer",
         "head_type": "linear",
         "block_type": "mlp",
