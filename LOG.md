@@ -356,12 +356,26 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Expected:** Training loss will decrease from more training on the data, and test accuracy could increase as long as the model doesn't begin overfitting; time to train will increase. 
 **Result:** Test accuracy 75.69% -> 76.01%. Training loss 0.3548. 4.9 min to on remote hpc cluster with one gpu. The model performed better on both test accuracy and training loss, showing more training time is better. 
 
-### Change 20 - cifar10 - 2026-10-26
+### Change 21 - cifar10 - 2026-10-26
 
 **Change:** Added back mlp head after mixer blocks.
 **Why:** Because cifar is a complex data set, it could likely benefit from an additional classifier head with more parameters to distinguish between the patterns found by the mixer blocks. 
 **Expected:** Training loss will likely decrease due to the increase of parameters to better learn the training set, test accuracy might increase if more complexity at the end of the network improves generalization, and training time will likely increase to backpropagate through the head. 
 **Result:** Test accuracy 76.01% -> 77.63%. Training loss 0.2764. 4.1 min to run on remote hpc cluster with one gpu. The model performed better on both test accuracy and training loss, showing more complexity at the end of the network is better. 
+
+### Change 22 - cifar10 - 2026-10-26
+
+**Change:** Increase epochs from 80 to 90. 
+**Why:** Training loss is still decreasing and test accuracy is increasing along with it, therefore more time to test could allow the model to generalize better. 
+**Expected:**  Training loss will decrease, training time will increase, and test accuracy may increase if the model continues to generalize but could decrease if it memorizes. 
+**Result:** Test accuracy 77.63% -> 77.82%. Training loss 0.2156. 4.4 min to run on remote hpc cluster with one gpu. The model performed better on both test accuracy and training loss, demonstrating that more training time allowed it to continue learning.
+
+### Change 10 - cifar10 - 2026-10-27
+
+**Change:** Added RGB channel scaling with rgb_jitter = 0.05. Each training image receives independent red, green, and blue intensity multipliers between 0.95 and 1.05. 
+**Why:** Objects can appear under different lighting and color balance. Small changes to channel intensities may help the model recognize useful patterns without depending too heavily on exact colors.
+**Expected:** Possibly higher accuracy from learning mild color variations. Training loss may increase because the images vary more. 
+**Result:** Test accuracy 77.82% -> 78.11%. Training loss 0.2551. 4.1 min to run on remote hpc cluster with one gpu. The model performed better significantly on test accuracy and only performed slightly worse on training loss, showing that learning given slight variances in each channel per image does increase generalization.
 
 ### Change 0 — imagenet32 — 2026-10-16
 
