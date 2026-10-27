@@ -46,7 +46,7 @@ TASK_SETTINGS = {
         "hidden": 1024,
         "depth": 30,
         "activation": "gelu",
-        "optimizer": "sgd",
+        "optimizer": "adamw",
         "lr": 0.05,
         "momentum": 0.9,
         "weight_decay": 0.0,
