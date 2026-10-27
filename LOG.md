@@ -349,6 +349,13 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Expected:** Training loss will decrease because the model is able to make finer grained updates and thus should be able to generalize better as well. 
 **Result:** Test accuracy 75.45% -> 75.69%. Training loss 0.5104. 4.4 min to run on my local machine with one gpu. The model performed better on both test accuracy but slightly worse on trainin loss, which suggests there may be some overfitting occuring. 
 
+### Change 20 - cifar10 - 2026-10-26
+
+**Change:** Increased epochs from 60 to 80.
+**Why:** The model still shows evidence of decreasing significantly in training loss, which could translate into more test accuracy gain from more training. 
+**Expected:** Training loss will decrease from more training on the data, and test accuracy could increase as long as the model doesn't begin overfitting; time to train will increase. 
+**Result:** Test accuracy 75.69% -> 76.01%. Training loss 0.3548. 4.9 min to run on my local machine with one gpu. The model performed better on both test accuracy and training loss, showing more training time is better. 
+
 ### Change 0 — imagenet32 — 2026-10-16
 
 **Change:** Baseline
