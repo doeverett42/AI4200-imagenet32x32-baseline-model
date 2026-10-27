@@ -63,7 +63,7 @@ TASK_SETTINGS = {
             "width": 128,
             "depth": 6,
             "token_hidden": 64,
-            "channel_hidden": 256
+            "channel_hidden": 512
         },
         "augmentation": {
             "hflip_prob": 0.5,

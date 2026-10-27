@@ -354,7 +354,14 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Change:** Increased epochs from 60 to 80.
 **Why:** The model still shows evidence of decreasing significantly in training loss, which could translate into more test accuracy gain from more training. 
 **Expected:** Training loss will decrease from more training on the data, and test accuracy could increase as long as the model doesn't begin overfitting; time to train will increase. 
-**Result:** Test accuracy 75.69% -> 76.01%. Training loss 0.3548. 4.9 min to run on my local machine with one gpu. The model performed better on both test accuracy and training loss, showing more training time is better. 
+**Result:** Test accuracy 75.69% -> 76.01%. Training loss 0.3548. 4.9 min to on remote hpc cluster with one gpu. The model performed better on both test accuracy and training loss, showing more training time is better. 
+
+### Change 20 - cifar10 - 2026-10-26
+
+**Change:** Added back mlp head after mixer blocks.
+**Why:** Because cifar is a complex data set, it could likely benefit from an additional classifier head with more parameters to distinguish between the patterns found by the mixer blocks. 
+**Expected:** Training loss will likely decrease due to the increase of parameters to better learn the training set, test accuracy might increase if more complexity at the end of the network improves generalization, and training time will likely increase to backpropagate through the head. 
+**Result:** Test accuracy 76.01% -> 77.63%. Training loss 0.2764. 4.1 min to run on remote hpc cluster with one gpu. The model performed better on both test accuracy and training loss, showing more complexity at the end of the network is better. 
 
 ### Change 0 — imagenet32 — 2026-10-16
 
