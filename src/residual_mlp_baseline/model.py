@@ -88,7 +88,7 @@ TASK_SETTINGS = {
         "weight_decay": 0.0,
         "dropout": 0,
         "scheduler": "none",
-        "head_type": "mlp",
+        "head_type": "linear",
         # Patch dimensions; the top-level dimensions belong to the flat model
         "patch_model": {
             "image_size": 32,
@@ -102,6 +102,7 @@ TASK_SETTINGS = {
             "hflip_prob": 0.5, 
             "translate": 0,
             "noise_std": 0.02,
+            "rgb_jitter": 0.05,  #Small independent changes to R, G, and B intensity
             "padding_mode": "reflection"
         }
     }
