@@ -88,6 +88,7 @@ TASK_SETTINGS = {
         "weight_decay": 0.0,
         "dropout": 0,
         "scheduler": "none",
+        "head_type": "mlp",
         # Patch dimensions; the top-level dimensions belong to the flat model
         "patch_model": {
             "image_size": 32,

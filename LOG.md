@@ -446,3 +446,10 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Why:** The training loss is continuing to go down throughout the 10 epochs, so it probably needs more time to learn or more epochs. 
 **Expected:** Because the number of epochs have doubled, the training time is likely to double, but the training loss should continue to decrease and test accuracy should improve. 
 **Result:** Validation accuracy 23.26% -> 24.80%. Train loss 3.2406. 45.3 min to train on remote cluster with one gpu. With more epochs, the model did learn more and improved in both training loss and test accuracy.
+
+### Change 9 - imagenet32 - 2026-10-26
+
+**Change:** Add mlp head to the architecture with 256 neurons. 
+**Why:** The model still has very low accuracy, which suggest it doesn't have enough complexity to capture the signal relating to the many classes, so adding an extra head block should help interpret the output from the mixing blocks.  
+**Expected:** The increased number of parameters will drive the training time up slightly, but training loss should decrease given more complexity, and hopefully this translates to useful signal and improving test accuracy. 
+**Result:** Validation accuracy 24.80% -> %. Train loss .  min to train on remote cluster with one gpu. 
