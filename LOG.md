@@ -342,6 +342,13 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Expected:** Training loss will decrease because training images are easier to process, and test accuracy could increase if the model gathers more useful patterns from the noise-free images. 
 **Result:** Test accuracy 72.76% -> 75.45%. Training loss 0.4226. 3.4 min to run on my local machine with one gpu. The model performed better on both training loss and test accuracy because the random noise and added rotation augmentation did not provide useful generalizations. 
 
+### Change 19 - cifar10 - 2026-10-26
+
+**Change:** Added a cosine scheduler down to 0.00001 learning rate. 
+**Why:** The model has a low learning rate and perhaps if it's keeping the same lr throughout, then it is overshooting directions of the loss plain that could allow the model to reach lower loss and better accuracy. 
+**Expected:** Training loss will decrease because the model is able to make finer grained updates and thus should be able to generalize better as well. 
+**Result:** Test accuracy 75.45% -> 75.69%. Training loss 0.5104. 4.4 min to run on my local machine with one gpu. The model performed better on both test accuracy but slightly worse on trainin loss, which suggests there may be some overfitting occuring. 
+
 ### Change 0 — imagenet32 — 2026-10-16
 
 **Change:** Baseline
