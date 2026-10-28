@@ -460,3 +460,10 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Why:** Objects can appear under different lighting and color balance. Small changes to channel intensities may help the model recognize useful patterns without depending too heavily on exact colors.
 **Expected:** Possibly higher accuracy from learning mild color variations. Training loss may increase because the images vary more. 
 **Result:** Test accuracy 24.80% -> 25.05%. Training loss (My jupyter notebook stopped showing loss). 42.8 min to run on remote hpc cluster with one gpu. The added data augmentation increased test accuracy substantially showing that slightly changing the channels of each image uniformly per example did allow the model to generalize better. 
+
+### Change 11 - cifar10 - 2026-10-27
+
+**Change:** Added cosine scheduler that decreases learning rate to 0.00001.
+**Why:** A smoothly decreasing learning rate will help the model make more fine-grained updates as the number of epochs increase. This is more of a guess to see if the model needs a decreasing learning rate even though it clearly hasn't memorized the data. 
+**Expected:** Training time should stay approximately the same, training loss may increase since the learning rate will be reduced as time goes on and updates won't be as big, but test accuracy should increase since the model should more smoothly fall into loss minimums. 
+**Result:** Test accuracy 25.05% -> 25.42%. Training loss 3.0393. 37.0 min to run on remote hpc cluster with one gpu. The cosine scheduler resulted in both a decrease in training loss and increase in test accuracy, demonstrating that a continually smaller learning rate does result in better learning. 
