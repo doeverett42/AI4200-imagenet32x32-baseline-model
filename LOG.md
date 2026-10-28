@@ -454,16 +454,9 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Expected:** The increased number of parameters will drive the training time up slightly, but training loss should decrease given more complexity, and hopefully this translates to useful signal and improving test accuracy. 
 **Result:** Validation accuracy 24.80% -> 23.92%. Train loss 3.2771. 36.1 min to train on remote cluster with one gpu. The added complexity actually reduced training time but also reduced validation accuracy and increased training loss. I'm unsure why this happened because the extra head helped cifar. It could be that the head is not responsive enough for 1,000 categories whereas it is for 10. I will revert the change. 
 
-### Change 10 - imagenet32 - 2026-10-26
-
-**Change:** Add mlp head to the architecture with 256 neurons. 
-**Why:** The model still has very low accuracy, which suggest it doesn't have enough complexity to capture the signal relating to the many classes, so adding an extra head block should help interpret the output from the mixing blocks.  
-**Expected:** The increased number of parameters will drive the training time up slightly, but training loss should decrease given more complexity, and hopefully this translates to useful signal and improving test accuracy. 
-**Result:** Validation accuracy 24.80% -> 23.92%. Train loss 3.2771. 36.1 min to train on remote cluster with one gpu. The added complexity actually reduced training time but also reduced validation accuracy and increased training loss. I'm unsure why this happened because the extra head helped cifar. It could be that the head is not responsive enough for 1,000 categories whereas it is for 10. 
-
 ### Change 10 - cifar10 - 2026-10-27
 
 **Change:** Added RGB channel scaling with rgb_jitter = 0.05. Each training image receives independent red, green, and blue intensity multipliers between 0.95 and 1.05. 
 **Why:** Objects can appear under different lighting and color balance. Small changes to channel intensities may help the model recognize useful patterns without depending too heavily on exact colors.
 **Expected:** Possibly higher accuracy from learning mild color variations. Training loss may increase because the images vary more. 
-**Result:** Test accuracy % -> %. Training loss .  min to run on remote hpc cluster with one gpu. 
+**Result:** Test accuracy 24.80% -> 25.05%. Training loss (My jupyter notebook stopped showing loss). 42.8 min to run on remote hpc cluster with one gpu. The added data augmentation increased test accuracy substantially showing that slightly changing the channels of each image uniformly per example did allow the model to generalize better. 
