@@ -1,78 +1,125 @@
-# ImageNet training dynamics and ablation guide
+# ImageNet training dynamics and ablation
 
-This script measures the final ImageNet recipe in `model.py`. It is separate from the graded `train()` function, so the harness gets no extra hooks, validation passes, or ablations.
+`analysis.py` trains the current ImageNet model from scratch, measures its internal behavior, and tests how much each residual branch matters. It reads the model and training choices from `TASK_SETTINGS` in `src/residual_mlp_baseline/model.py`.
 
-## What I need to run
+This is a separate analysis run. It does not change the graded `train()` or `predict()` functions and does not train CIFAR again. CIFAR's settings are included in the saved configuration so the report has a record of all three final recipes.
 
-1. Put `analysis.py` in the repository root, beside `src` and the harness notebook.
-2. Use the existing HPC Python environment with PyTorch, NumPy, and Matplotlib. If Matplotlib is missing, install only it with `python -m pip install matplotlib`.
-3. The script expects the harness cache at `data/imagenet32/X_train.npy` and `data/imagenet32/y_train.npy`. If the HPC cache is elsewhere, change the hardcoded `DATA_DIR` near the top of `analysis.py` to that folder. It does not download data.
-4. Run `python analysis.py` in the HPC environment. There are no command-line arguments. This is a full analysis training run, not a small local experiment.
-5. Keep the resulting `analysis_results/imagenet32_final` folder. To rerun, choose a new hardcoded `RUN_NAME`; the script refuses to overwrite a folder containing earlier results.
+## What is being analyzed
 
-The code reads the current final settings: 12 patch blocks, 20 epochs, GELU, SGD learning rate 0.05, momentum 0.9, horizontal flipping 0.5, and noise standard deviation 0.02. It trains from scratch. Printed losses cannot recover missing initialization or midway measurements from the old run, so one instrumented run is necessary unless those measurements were already saved.
+The current ImageNet recipe has 12 patch blocks, 128 features per patch, GELU, LayerNorm, and a linear classifier. It uses SGD with momentum 0.9, a starting learning rate of 0.05, cosine decay, 20 epochs, and batch size 256. Training augmentation uses horizontal flips, RGB jitter 0.05, and pixel noise 0.02.
 
-## What the script does
+These values are not copied into a second settings dictionary in the analysis file. `build_model()` creates the model from your current source, and the analysis reads the same task settings. If you change that source before running, the analysis follows the new settings. The saved configuration and source snapshots show exactly what was used.
 
-It holds out five training images from every ImageNet class: 5,000 validation images in total. The split is deterministic and saved in `split_indices.npz`. The official harness test images are never read. The remaining training images are still memory-mapped uint8 data; only the current batch is converted to floating point. This avoids creating full-size floating-point copies of ImageNet in RAM.
+## Run it
 
-It chooses 128 fixed, clean training images for the measurement batch. Those image indices, their labels, and their prepared pixel values stay fixed across snapshots. At 20 epochs, measurements happen at epochs 0, 2, 10, and 20.
+Run this from the repository folder on the cluster, using the environment that runs your harness:
 
-At a snapshot, `TrainingDynamics.measure()` copies the model and optimizer together. The copied optimizer retains the actual momentum buffers. The copied model uses eval mode, but gradients are enabled. It runs the fixed batch, computes cross entropy, records gradients, and takes one optimizer step on the copy. The live training model, optimizer, modes, and RNG state are preserved. The reported update ratio is therefore a real **diagnostic step on the fixed eval-mode batch**, not an approximation and not the last stochastic training update.
+```bash
+python analysis.py
+```
 
-At each epoch the script also records loss and accuracy on the same clean validation split. This produces a training curve for the final recipe. The analysis run uses a slightly smaller training set than the harness, so its validation score should be reported separately from the historical 24.80% harness score.
+In Jupyter, `%run analysis.py` also runs the file. Restart the kernel first if you changed or reinstalled the package; already imported modules can otherwise remain stale.
 
-## Understanding the measurements
+The script expects the existing harness cache:
 
-**Activation variance:** The population variance over all entries of the residual stream after the patch projection and after each complete block. Depth zero means the projection. A growing curve means the values spread out; a shrinking curve means they become less varied. LayerNorm normalizes the branch input, so the skip stream itself does not have to maintain variance one.
+```text
+data/imagenet32/X_train.npy
+data/imagenet32/y_train.npy
+```
 
-**Branch-to-stream ratio:** The RMS of a branch correction divided by the RMS of that branch's input. RMS is the square root of the mean squared values. Token and channel branches have separate denominators: channel mixing receives the token-updated stream. The CSV also saves their absolute RMS values. A smaller ratio can result from a larger stream, even if the branch output stays similar. The whole-block ratio measures the combined change after both additions.
+If your cache is somewhere else, change only `DATA_DIR` near the top of `analysis.py`. It never downloads data or opens the official test files. Besides PyTorch, it needs NumPy and Matplotlib. If those are missing in the cluster environment, install them with `python -m pip install numpy matplotlib`.
 
-**Gradient RMS:** The RMS of each Linear layer's weight gradient from the fixed-batch loss. It covers the patch projection, four matrices per patch block, and the final classifier. The current model has 50 Linear layers. Use their CSV names to match plot positions to depth. A missing gradient is labeled separately from a genuine zero. Compare the profile across checkpoints before describing gradients as vanishing or exploding.
+The script uses CUDA when available and prints the selected device before training. It reads the image cache as uint8 and converts one batch at a time. This avoids creating a full floating-point copy of ImageNet in RAM.
 
-**Update-to-weight ratio:** The RMS of the copied optimizer step's actual weight change divided by the RMS of the weights immediately before the step. This includes momentum or AdamW behavior. Around 0.001 is a rough comparison point, not a rule that every layer must satisfy. The plot keeps true zeros visible using a symmetric logarithmic scale.
+## What happens in order
 
-**Saturation:** The final model uses GELU, so the assignment's tanh and ReLU diagnostics are not applicable. The run configuration states this explicitly. If the model is changed to tanh, the code records the fraction of activation inputs with absolute value above two. For ReLU, it records the zero-output fraction and the fraction of hidden units zero or nonzero everywhere over the fixed batch and shared spatial positions. Being inactive on this batch does not prove a unit is permanently dead.
+1. Set aside five images from each class. This gives 5,000 validation images taken only from the training split. Their indices are fixed by the seed and saved.
+2. Select 128 different images from the remaining training data. These are the fixed measurement batch. They are reused without augmentation.
+3. Build a new model and optimizer. No saved weights are loaded.
+4. Measure the model before training, then after epochs 2, 10, and 20. The checkpoint positions adjust automatically if the epoch count changes.
+5. Print training loss, clean validation loss, validation accuracy, and learning rate after every epoch.
+6. After training, evaluate each branch removal separately on the same validation split. Restore the full model after each removal.
+7. Save the measurements, figures, configuration, source snapshots, and a ZIP file to send back for the report.
+
+The analysis uses slightly fewer training examples and its own fixed split. Its validation accuracy is a new result; it is not expected to reproduce the logged 25.42% harness score exactly.
+
+## How the measurements work
+
+### Activation variance
+
+Variance measures how spread out the stream values are around their mean. The script measures all entries in the batch, patches, and features together. It records the stream after the patch projection and after every complete mixing block.
+
+Depth 0 is the projection. Depths 1 through 12 are the mixing blocks. Python names such as `blocks.0` still start at zero, so `blocks.0` means depth 1.
+
+Look for growth, shrinkage, or abrupt changes with depth. LayerNorm normalizes branch inputs; it does not force the accumulated residual stream to have variance one.
+
+### Branch to stream ratio
+
+RMS means square the values, average them, and take the square root. It describes a signal's typical size.
+
+The branch ratio is `RMS(branch correction) / RMS(branch input)`. The script records token mixing, channel mixing, and the complete block correction separately. The channel branch's input already includes the token branch's addition.
+
+A ratio near zero means the correction is small relative to that input. Check both RMS values before deciding why: the numerator may be small, or the input stream may have grown. This measures size, not usefulness by itself.
+
+### RMS gradient
+
+The script calculates cross-entropy loss on the fixed batch and measures the RMS gradient of every linear layer's weight matrix. There are 50 such matrices in the current ImageNet model: one patch projection, four per mixing block, and one classifier.
+
+Eval mode does not disable gradients. It disables dropout and uses inference behavior for normalization, making measurements more comparable between checkpoints.
+
+### Update to weight ratio
+
+The script copies the model and optimizer together. It calculates the fixed-batch gradient on that copy, takes one actual optimizer step, and measures `RMS(weight change) / RMS(weights before the step)`.
+
+Copying the optimizer preserves momentum. Simply multiplying the gradient by the learning rate would miss momentum's contribution. The copy is discarded, leaving the live weights, optimizer, gradients, module modes, and global random state unchanged.
+
+Measurements happen before the scheduler advances, so each trained checkpoint uses the learning rate from the epoch just completed. Epoch 0 uses the initial learning rate without accumulated momentum. With the current cosine schedule, later updates should become smaller partly because the learning rate decreases. The `1e-3` line is a rough comparison, not a target every layer must hit.
+
+### Saturation
+
+The current ImageNet model uses GELU. The assignment's tanh and ReLU statistics are therefore marked not applicable rather than filled with misleading zeros.
+
+If a later model contains tanh, the script measures the fraction of inputs whose magnitude exceeds two. For ReLU, it records individual zero outputs and units that are always zero or always nonzero across the fixed batch. Each non-batch position/feature is treated as a unit. Inactive on this batch does not mean permanently inactive.
 
 ## How the ablation works
 
-Each of the 12 blocks has a token branch and a channel branch. That gives **24 individual branch ablations**. The script also tests **12 whole-block ablations** as a separate comparison.
+A patch block makes two additions: token mixing and then channel mixing. The current model therefore has 24 individual residual branches across 12 blocks.
 
-The important distinction is where the skip addition happens. A `MixingBranch` returns just its correction, so a hook on that branch must return `torch.zeros_like(output)`. The parent then computes the original skip stream plus zero. Returning the branch input would add that stream twice. A hook on the whole `PatchBlock` returns `inputs[0]`, removing both corrections.
+The script first measures the full validation accuracy. It then removes one individual branch at a time by returning a zero correction. The surrounding skip addition still passes the input through, and the other branch remains active. It also tests removing each complete block by returning that block's input. This gives 12 whole-block points against depth in addition to the 24 individual-branch results.
 
-Every trial starts from the same trained model, disables only one target, and evaluates the same 5,000 clean validation images. No ablated model is retrained. A `finally` block removes the hook, and the full-model predictions are checked again at the end.
+No ablated model is retrained. No removals accumulate. Hooks are removed even if an evaluation raises an error, and a final check verifies that the full model's class predictions have been restored.
 
-The plotted drop is full-model accuracy minus ablated-model accuracy, in percentage points. Positive means removal hurt accuracy. Negative means removal improved the measured accuracy. The CSV also records how many previously correct predictions were lost and how many became correct. Its paired standard error describes sampling uncertainty on this validation subset; it is not variation across training seeds.
+Accuracy drop is full accuracy minus ablated accuracy, expressed in percentage points. For example, 25% to 23% is a drop of 2 points. Negative drops are retained because removal may improve measured accuracy.
 
-Compare the token and channel series separately by block depth. Whole-block removal removes both, so it answers a different question. Then use the scatterplot to compare final branch ratios with the corresponding accuracy drops. A large correction need not be indispensable; a small correction can still change a difficult decision. Individually removable branches cannot automatically be removed together.
+Compare the matching kinds: token ratio against token removal, channel ratio against channel removal, and total block ratio against whole-block removal. A large correction may be redundant; a small one may influence difficult decisions. Individually unimportant blocks cannot automatically be removed together.
 
-## Files to use in the report
+Five examples per class keeps repeated validation practical, but small drops have limited precision. The CSV includes a paired standard-error estimate based on which validation predictions changed. This is a rough sampling measure, not variation across independently trained seeds or a proof of statistical significance.
+
+## Output files
+
+Results go to `analysis_results/imagenet32_final_updated/`.
 
 | File | What it contains |
 | --- | --- |
-| `run_config.json` | Exact settings, seed, software, parameter count, source hashes, split sizes, timing, and completion status |
-| `training_curve.csv` | One training loss and clean validation loss/accuracy per epoch |
-| `activation_variance.csv` | Stream variance and RMS at depth zero and after every block |
-| `branch_ratios.csv` | Token, channel, and whole-block RMS measurements at every snapshot |
-| `linear_metrics.csv` | Weight-gradient RMS, actual step RMS, update ratio, and Linear output variance |
-| `probe_checkpoints.csv` | Fixed-batch loss, accuracy, and current learning rate at each snapshot |
-| `saturation.csv` | Only created when tanh or ReLU modules are present |
-| `ablation.csv` | Full and ablated validation scores, drops, and paired correctness counts |
-| `figures/` | Ready-to-insert PNG plots |
-| `analysis_summary.md` | Measured observations and interpretation reminders |
+| `run_config.json` | Settings, source hashes, device, split sizes, checkpoint epochs, and run status |
+| `training_curve.csv` | Every epoch's training loss, validation loss/accuracy, learning rate, and training time |
+| `probe_checkpoints.csv` | Fixed-batch loss, accuracy, and learning rate at each measurement |
+| `activation_variance.csv` | Stream variance and RMS after projection and each block |
+| `branch_ratios.csv` | Input RMS, correction RMS, and their ratio for each branch and complete block |
+| `linear_metrics.csv` | Weight RMS, gradient RMS, actual update RMS, update ratio, and linear-output variance |
+| `ablation.csv` | Full and ablated accuracy, accuracy drops, and changed-correctness counts |
+| `saturation.csv` | Created only when tanh or ReLU is actually present |
+| `split_indices.npz` | The training, validation, and fixed-batch indices |
+| `source/` | A snapshot of the analysis and model source used for this run |
+| `figures/` | Ready-to-use PNG plots for the report |
+| `analysis_summary.md` | Measured observations and reminders for interpreting them |
 
-`run_config.json` says `complete` only after the CSVs, figures, summary, and ablation checks have finished successfully. An interrupted run can retain partial results without being presented as complete.
+The plots include activation variance, token/channel/whole-block ratios, gradient RMS, update ratios, training curves, learning rate, ablation drops, and ratio-versus-ablation comparisons. Linear plots use layer order; `linear_metrics.csv` maps each index to its exact module name.
 
-## Completing the editable report
+The script refuses to overwrite an existing run. For a repeat, change `RUN_NAME` at the top to a new name before running. Do not delete the previous measurements just to reuse the name.
 
-The Word report already contains the model recipes, recorded harness results, experiment explanations, failures, and an actual comparison of historical ImageNet training curves. The internal dynamics and ablation sections have specific prompts instead of invented findings.
+## What to send back
 
-After the HPC run, insert the matching figures and replace those prompts using the CSV values. Include the projection-to-last-block variance change, gradient and update extremes by layer, the most damaging individual branch removals, and whether branch ratios follow the same ranking as accuracy drops. Keep the new analysis validation accuracy distinct from the historical harness score.
+Send `analysis_results/imagenet32_final_updated.zip` after the script prints that analysis is complete. It contains the measurements and figures needed to write the remaining report section, without images or trained weights.
 
-One additional verification remains: MNIST's historical 99.27% result was logged before an unrecorded hidden-width change from 1568 to the current 1024. Verify a matching current-width harness result before labeling 99.27% as its exact final score. The current CIFAR and ImageNet recipes have matching recorded results.
-
-## Small code map
-
-`CachedImages` reads selected images without loading all float tensors. `split_indices` builds the saved validation split. `make_optimizer` and `make_scheduler` follow the existing training recipe. `TrainingDynamics` manages the fixed-batch hooks and copied step. `evaluate` computes clean validation metrics while restoring mode and RNG state. `ablate_branches` removes one correction at a time. `make_plots` creates the figures, and `write_summary` records measured observations. `main` connects those pieces in training order.
-
-The analysis is intentionally a separate experiment: the graded `train()` and `predict()` functions remain unchanged. Do not use the tiny synthetic verification outputs as project results.
+We can then describe which layers grow or shrink the signal, whether gradients and updates remain useful, which branches matter most, and whether their magnitude predicts their ablation impact. The current Word report already explains the method and the logged experiments; its measurement prompts still need the actual results from this run.
