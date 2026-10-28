@@ -574,7 +574,7 @@ def make_plots(output_dir, dynamics, curve, ablations):
 
 
 def write_summary(output_dir, dynamics, ablations, metadata):
-    # Report measured values, but leave causal conclusions for the report discussion.
+    # Save measured results; interpret them after the run.
     final_epoch = max(row["epoch"] for row in dynamics.stream_rows)
     streams = [row for row in dynamics.stream_rows if row["epoch"] == final_epoch]
     layers = [row for row in dynamics.layer_rows
@@ -585,7 +585,6 @@ def write_summary(output_dir, dynamics, ablations, metadata):
         "# ImageNet analysis results",
         f"Validation accuracy: {metadata['validation_accuracy']:.2%} on "
         f"{metadata['validation_count']:,} held-out training images.",
-        "This is a separate analysis run, not the harness test score.",
         "## Measured observations",
         f"At epoch {final_epoch}, stream variance was {streams[0]['variance']:.6g} "
         f"after projection and {streams[-1]['variance']:.6g} after the last block.",
@@ -604,34 +603,7 @@ def write_summary(output_dir, dynamics, ablations, metadata):
             f"The smallest absolute drop was at depth {smallest['depth']}: "
             f"{smallest['accuracy_drop_pp']:+.3f} percentage points.",
         ])
-    text.extend([
-        "## How to explain the figures",
-        "Compare all checkpoints before describing gradients as vanishing or exploding. "
-        "Gradient size also depends on loss scaling, layer dimensions, and the batch.",
-        "LayerNorm normalizes branch inputs. The residual stream itself can still grow "
-        "as each block adds a correction.",
-        "A small branch-to-stream ratio can mean a small correction or a large input "
-        "stream. The CSV includes both RMS values so I can distinguish these cases.",
-        "Update ratios use one real optimizer step on a discarded copy in eval mode. "
-        "The optimizer keeps its current momentum or Adam state. The rate is the rate "
-        "used in the completed epoch, before the scheduler changes it for the next epoch.",
-        "The 1e-3 update ratio is a rough reference, not a requirement. With cosine decay, "
-        "late updates are expected to get smaller even if gradients remain useful.",
-        "The initialization probe has no accumulated optimizer state yet. Later probes "
-        "include that state, so their updates are not simply learning rate times gradient.",
-        "A negative ablation drop means removal improved validation accuracy on this split. "
-        "A small drop does not prove a branch is useless, or that several branches can be "
-        "removed together without loss. A shallower retrained model is a separate test.",
-        "Match token, channel, and whole-block points in branch_ratio_vs_ablation.png. "
-        "A large correction need not contain information important to the final prediction.",
-        "Training loss uses augmented images; validation loss uses clean images. Their "
-        "gap therefore includes augmentation difficulty as well as generalization.",
-        "## Saturation",
-        metadata["saturation_note"],
-        "## Files to use in the report",
-        "Use the CSVs for exact values and the PNGs for figures. Depth starts at 1; "
-        "the projection is depth 0. Python module names such as blocks.0 start at zero.",
-    ])
+    text.append(f"Saturation: {metadata['saturation_note']}")
     (Path(output_dir) / "analysis_summary.md").write_text("\n\n".join(text), encoding="utf-8")
 
 
@@ -657,16 +629,8 @@ def saturation_note(model):
     # Inspect the actual modules instead of assuming a settings flag is active.
     applies = any(isinstance(module, (nn.Tanh, nn.ReLU)) for module in model.modules())
     if applies:
-        return (
-            "See saturation.csv for tanh and/or ReLU measurements. ReLU units are "
-            "individual non-batch positions/features evaluated across all probe images. "
-            "Zero on this batch does not prove a neuron is permanently inactive."
-        )
-    return (
-        "Not applicable: this model has no tanh or ReLU modules. The current ImageNet "
-        "model uses GELU, so tanh magnitude-above-2 and ReLU zero-unit statistics "
-        "would not describe its activation. No saturation values were invented."
-    )
+        return "See saturation.csv for tanh/ReLU measurements."
+    return "Not applicable: no tanh or ReLU layers."
 
 
 def package_results(output_dir):
