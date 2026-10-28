@@ -87,7 +87,7 @@ TASK_SETTINGS = {
         "momentum": 0.9,
         "weight_decay": 0.0,
         "dropout": 0,
-        "scheduler": "none",
+        "scheduler": "cosine",
         "head_type": "linear",
         # Patch dimensions; the top-level dimensions belong to the flat model
         "patch_model": {
