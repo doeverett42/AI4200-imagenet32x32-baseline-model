@@ -1,0 +1,158 @@
+{
+  "status": "complete",
+  "task": "imagenet32",
+  "settings": {
+    "batch_size": 256,
+    "epochs": 20,
+    "width": 128,
+    "hidden": 256,
+    "depth": 15,
+    "activation": "gelu",
+    "optimizer": "sgd",
+    "lr": 0.05,
+    "momentum": 0.9,
+    "weight_decay": 0.0,
+    "dropout": 0,
+    "scheduler": "cosine",
+    "head_type": "linear",
+    "patch_model": {
+      "image_size": 32,
+      "patch_size": 4,
+      "width": 128,
+      "depth": 12,
+      "token_hidden": 64,
+      "channel_hidden": 256
+    },
+    "augmentation": {
+      "hflip_prob": 0.5,
+      "translate": 0,
+      "noise_std": 0.02,
+      "rgb_jitter": 0.05,
+      "padding_mode": "reflection"
+    }
+  },
+  "all_task_settings": {
+    "mnist": {
+      "batch_size": 256,
+      "epochs": 40,
+      "width": 392,
+      "hidden": 1024,
+      "depth": 10,
+      "activation": "gelu",
+      "optimizer": "adamw",
+      "lr": 0.001,
+      "momentum": 0.9,
+      "weight_decay": 0.01,
+      "dropout": 0.1,
+      "scheduler": "cosine",
+      "normalization": "batch",
+      "head_type": "linear",
+      "block_type": "maxout",
+      "maxout_pieces": 2,
+      "augmentation": {
+        "rotation": 7,
+        "translate": 2,
+        "hflip_prob": 0.0,
+        "noise_std": 0.0,
+        "padding_mode": "zeros"
+      }
+    },
+    "cifar10": {
+      "batch_size": 256,
+      "epochs": 90,
+      "width": 512,
+      "hidden": 1024,
+      "depth": 30,
+      "activation": "gelu",
+      "optimizer": "sgd",
+      "lr": 0.05,
+      "momentum": 0.9,
+      "weight_decay": 0.0,
+      "dropout": 0.1,
+      "scheduler": "cosine",
+      "normalization": "layer",
+      "head_type": "mlp",
+      "block_type": "mlp",
+      "maxout_pieces": 2,
+      "patch_model": {
+        "image_size": 32,
+        "patch_size": 4,
+        "width": 128,
+        "depth": 6,
+        "token_hidden": 64,
+        "channel_hidden": 256
+      },
+      "augmentation": {
+        "hflip_prob": 0.5,
+        "translate": 2,
+        "rotation": 0,
+        "noise_std": 0.0,
+        "rgb_jitter": 0.05,
+        "padding_mode": "reflection"
+      }
+    },
+    "imagenet32": {
+      "batch_size": 256,
+      "epochs": 20,
+      "width": 128,
+      "hidden": 256,
+      "depth": 15,
+      "activation": "gelu",
+      "optimizer": "sgd",
+      "lr": 0.05,
+      "momentum": 0.9,
+      "weight_decay": 0.0,
+      "dropout": 0,
+      "scheduler": "cosine",
+      "head_type": "linear",
+      "patch_model": {
+        "image_size": 32,
+        "patch_size": 4,
+        "width": 128,
+        "depth": 12,
+        "token_hidden": 64,
+        "channel_hidden": 256
+      },
+      "augmentation": {
+        "hflip_prob": 0.5,
+        "translate": 0,
+        "noise_std": 0.02,
+        "rgb_jitter": 0.05,
+        "padding_mode": "reflection"
+      }
+    }
+  },
+  "seed": 0,
+  "device": "cuda",
+  "gpu": "NVIDIA A100-PCIE-40GB",
+  "torch_version": "2.13.0",
+  "parameters": 1032552,
+  "train_count": 1276167,
+  "validation_count": 5000,
+  "validation_per_class": 5,
+  "probe_batch_size": 128,
+  "checkpoints": [
+    0,
+    2,
+    10,
+    20
+  ],
+  "source_sha256": {
+    "analysis.ipynb": "4b2df7451ae9c05f55bf3b3583613868c2753312ebf579a2cb657329666b06c2",
+    "src/residual_mlp_baseline/__init__.py": "926c34c78756172c7555de36d59cf407804efaad2227eeadb0a9d6ad156adfd9",
+    "src/residual_mlp_baseline/model.py": "f134f90934c5e5484f93c69f7fa044eac0c80724ac946397319c1e13e0a7504a",
+    "src/residual_mlp_baseline/train.py": "1d1c9496f2c591a0f5f6865f18678a43f1efbf27dfb82df702210720c22c46c1",
+    "src/residual_mlp_baseline/patch_mlp.py": "49b0f1ceeb182758b30e5ed76a354deaf6aca6e0066aca9abc46b577c7d452c6",
+    "src/residual_mlp_baseline/augmentation.py": "a79d596a5ed551beedd5f2fd2243c4fcdecb89942e46aaa09eee007b2c02c894"
+  },
+  "saturation_note": "Not applicable: no tanh or ReLU layers.",
+  "split_note": "Validation is held out from training; official test files are never loaded.",
+  "probe_note": "Fixed clean training batch, eval mode, actual step on a copied model and optimizer. Live weights, gradients, optimizer, module modes, and global RNG remain unchanged.",
+  "update_rate_note": "Probes run after the epoch and before scheduler.step(), using the completed epoch's rate. Epoch 0 uses the initial rate with no accumulated optimizer state.",
+  "comparison_note": "This retrains the final recipe on a training-validation split. Its score is not a reproduction of the full-data harness score or exact stochastic trajectory.",
+  "validation_accuracy": 0.2786000072956085,
+  "validation_loss": 3.627341418457031,
+  "training_minutes": 35.6863457933534,
+  "saturation_applicable": false,
+  "total_analysis_minutes": 35.94665839400453
+}
