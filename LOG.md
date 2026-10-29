@@ -78,7 +78,7 @@ depth, so complexity was not improving it but perhaps causing too much training 
 
 ### Change 9 - mnist - 2026-10-21
 
-**Change:** Changed width from 128 to 392 and changed hidden from 256 to 1568. 
+**Change:** Changed width from 128 to 392 and changed hidden from 256 to 1024. 
 **Why:** The model seemed to get stuck on training loss, so I wanted to push it further by increasing complexity to learn. 
 **Expected:** More feature dimensions would allow the model to reduce training loss but may lead to overfitting. 
 **Result:** Validation accuracy 98.39% -> 98.42%. Train loss 0.0001. 1.1 min to train on my local machine with 1 GPU. The increased complexity did allow the model to achive the lowest training loss so far, but the increase in test accuracy was only marginal of +0.01% from the best previous model. 
