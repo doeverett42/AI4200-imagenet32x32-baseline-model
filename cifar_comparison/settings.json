@@ -1,0 +1,56 @@
+{
+  "seed": 0,
+  "device": "cuda",
+  "training_images": 50000,
+  "baseline_architecture": {
+    "width": 128,
+    "hidden": 256,
+    "depth": 30,
+    "activation": "tanh"
+  },
+  "baseline_training": {
+    "epochs": 30,
+    "batch_size": 256,
+    "lr": 0.05,
+    "optimizer": "sgd",
+    "momentum": 0.0,
+    "weight_decay": 0.0,
+    "scheduler": "none",
+    "dropout": 0.0,
+    "augmentation": {}
+  },
+  "current_best": {
+    "batch_size": 256,
+    "epochs": 90,
+    "width": 512,
+    "hidden": 1024,
+    "depth": 30,
+    "activation": "gelu",
+    "optimizer": "sgd",
+    "lr": 0.05,
+    "momentum": 0.9,
+    "weight_decay": 0.0,
+    "dropout": 0.1,
+    "scheduler": "cosine",
+    "normalization": "layer",
+    "head_type": "mlp",
+    "block_type": "mlp",
+    "maxout_pieces": 2,
+    "patch_model": {
+      "image_size": 32,
+      "patch_size": 4,
+      "width": 128,
+      "depth": 6,
+      "token_hidden": 64,
+      "channel_hidden": 256
+    },
+    "augmentation": {
+      "hflip_prob": 0.5,
+      "translate": 2,
+      "rotation": 0,
+      "noise_std": 0.0,
+      "rgb_jitter": 0.05,
+      "padding_mode": "reflection"
+    }
+  }
+}
