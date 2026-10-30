@@ -321,56 +321,56 @@ depth, so complexity was not improving it but perhaps causing too much training 
 **Expected:** The training loss should decrease given more parameters allow the model to learn the dataset; test accuracy could increase from this or decrease if the model begins to specialize. 
 **Result:** Test accuracy 71.71% -> 70.06%. Training loss 0.2529. 6.0 min to run on my local machine with one gpu. The residual patch mlp demonstrated significant improvement in training loss, but it did worse in test accuracy, meaning it began to overfit and specialize on the testing data.
 
-### Change 16 - cifar10 - 2026-10-25
+### Change 17 - cifar10 - 2026-10-25
 
 **Change:** Decreased patch blocks from 12 to 10.  
 **Why:** Lese patch blocks to hopefully find a sweet spot of lowering training loss and helping the model generalize useful features. 
 **Expected:** The training loss will increase given less parameters, but the test accuracy could increase if this depth is before the model begins to specialize. 
 **Result:** Test accuracy 70.06% -> 70.88%. Training loss 0.2726. 5.0 min to run on my local machine with one gpu. The model performed slightly worse on training loss and still seemed to over specialize on the training data from test accuracy. I will revert to 6. 
 
-### Change 17 - cifar10 - 2026-10-25
+### Change 18 - cifar10 - 2026-10-25
 
 **Change:** Added dropout to the patch mlp with 6 blocks. 
 **Why:** The model has shown signs of overfitting, so adding dropout could help the model rely less on certain features and generalize more. 
 **Expected:** Training loss will likey increase because it loses some of the inputs it was training on, but test accuracy should increase if the model generalizes better. 
 **Result:** Test accuracy 71.71% -> 72.76%. Training loss 0.5332. 3.6 min to run on my local machine with one gpu. The model performed slightly worse on training loss but improved in test accuracy, showing that patch improves and generalizes better with dropout. 
 
-### Change 18 - cifar10 - 2026-10-26
+### Change 19 - cifar10 - 2026-10-26
 
 **Change:** Removed noise_std and rotation in data augmentation. 
 **Why:** Because the images are already scaled down to 32x32, adding noise or rotation could obscure the target category too much to be useful.  
 **Expected:** Training loss will decrease because training images are easier to process, and test accuracy could increase if the model gathers more useful patterns from the noise-free images. 
 **Result:** Test accuracy 72.76% -> 75.45%. Training loss 0.4226. 3.4 min to run on my local machine with one gpu. The model performed better on both training loss and test accuracy because the random noise and added rotation augmentation did not provide useful generalizations. 
 
-### Change 19 - cifar10 - 2026-10-26
+### Change 20 - cifar10 - 2026-10-26
 
 **Change:** Added a cosine scheduler down to 0.00001 learning rate. 
 **Why:** The model has a low learning rate and perhaps if it's keeping the same lr throughout, then it is overshooting directions of the loss plain that could allow the model to reach lower loss and better accuracy. 
 **Expected:** Training loss will decrease because the model is able to make finer grained updates and thus should be able to generalize better as well. 
 **Result:** Test accuracy 75.45% -> 75.69%. Training loss 0.5104. 4.4 min to run on my local machine with one gpu. The model performed better on both test accuracy but slightly worse on trainin loss, which suggests there may be some overfitting occuring. 
 
-### Change 20 - cifar10 - 2026-10-26
+### Change 21 - cifar10 - 2026-10-26
 
 **Change:** Increased epochs from 60 to 80.
 **Why:** The model still shows evidence of decreasing significantly in training loss, which could translate into more test accuracy gain from more training. 
 **Expected:** Training loss will decrease from more training on the data, and test accuracy could increase as long as the model doesn't begin overfitting; time to train will increase. 
 **Result:** Test accuracy 75.69% -> 76.01%. Training loss 0.3548. 4.9 min to on remote hpc cluster with one gpu. The model performed better on both test accuracy and training loss, showing more training time is better. 
 
-### Change 21 - cifar10 - 2026-10-26
+### Change 22 - cifar10 - 2026-10-26
 
 **Change:** Added back mlp head after mixer blocks.
 **Why:** Because cifar is a complex data set, it could likely benefit from an additional classifier head with more parameters to distinguish between the patterns found by the mixer blocks. 
 **Expected:** Training loss will likely decrease due to the increase of parameters to better learn the training set, test accuracy might increase if more complexity at the end of the network improves generalization, and training time will likely increase to backpropagate through the head. 
 **Result:** Test accuracy 76.01% -> 77.63%. Training loss 0.2764. 4.1 min to run on remote hpc cluster with one gpu. The model performed better on both test accuracy and training loss, showing more complexity at the end of the network is better. 
 
-### Change 22 - cifar10 - 2026-10-26
+### Change 23 - cifar10 - 2026-10-26
 
 **Change:** Increase epochs from 80 to 90. 
 **Why:** Training loss is still decreasing and test accuracy is increasing along with it, therefore more time to test could allow the model to generalize better. 
 **Expected:**  Training loss will decrease, training time will increase, and test accuracy may increase if the model continues to generalize but could decrease if it memorizes. 
 **Result:** Test accuracy 77.63% -> 77.82%. Training loss 0.2156. 4.4 min to run on remote hpc cluster with one gpu. The model performed better on both test accuracy and training loss, demonstrating that more training time allowed it to continue learning.
 
-### Change 10 - cifar10 - 2026-10-27
+### Change 24 - cifar10 - 2026-10-27
 
 **Change:** Added RGB channel scaling with rgb_jitter = 0.05. Each training image receives independent red, green, and blue intensity multipliers between 0.95 and 1.05. 
 **Why:** Objects can appear under different lighting and color balance. Small changes to channel intensities may help the model recognize useful patterns without depending too heavily on exact colors.
